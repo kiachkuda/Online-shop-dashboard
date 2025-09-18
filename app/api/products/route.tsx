@@ -115,32 +115,9 @@ async function saveImages(images: File[]) {
   }));
 }
 
-// DELETE /api/products/:id
+// DELETE /api/prozducts/:id
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const db = await clientDb();
-    const productId = params.id;
 
-    if (!ObjectId.isValid(productId)) {
-      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
-    }
-
-    const result = await db.collection("products").deleteOne({ _id: new ObjectId(productId) });
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: "Product deleted" }, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
-  }
-}
 
 
 
