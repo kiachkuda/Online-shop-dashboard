@@ -11,7 +11,7 @@ export const shoesData: Shoe[] = [
     gender:"Women",
     sizes: [7, 8, 9, 10, 11],
     colors: ["Black", "White"],
-    status: "sold",
+    available: false,
     images: ["/images/nike_air_max_270.jpg"]
   },
   {
@@ -22,9 +22,9 @@ export const shoesData: Shoe[] = [
     gender:"Unisex",
     category: "Running",
     price: 180,
-    sizes: [6, 7, 8, 9, 10, 12],
+    sizes: [7, 37, 8.5],
     colors: ["Blue", "Gray"],
-    status: "available",
+    available: true,
     images: ["/images/adidas_ultraboost_22.jpg"]
   },
   {
@@ -37,7 +37,7 @@ export const shoesData: Shoe[] = [
     price: 70,
     sizes: [6, 7, 8, 9, 10, 11],
     colors: ["Red", "Black"],
-    status: "available",
+    available: false,
     images: ["/images/puma_suede_classic.jpg"]
   },
   {
@@ -50,8 +50,8 @@ export const shoesData: Shoe[] = [
     price: 200,
     sizes: [7, 8, 9, 10, 11, 12],
     colors: ["White/Black/Red"],
+    available: true,
     images: ["/images/jordan_retro_1.jpg", "/images/jordan_retro_1.jpg"],
-     status: "available",
   },
   {
     id: 5,
@@ -63,7 +63,7 @@ export const shoesData: Shoe[] = [
     price: 55,
     sizes: [37, 7.5, 235],
     colors: ["White", "Black"],
-    status: "available",
+    available: true,
     images: ["/images/converse_chuck_taylor.jpg"]
   }
 ];

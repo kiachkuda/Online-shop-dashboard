@@ -1,27 +1,46 @@
 export type User = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
+  image_url: string;
   password: string;
 };
 
 export type Customer = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   image_url: string;
 };
 
-export type Shoe = {
-    id:number;
+export type Product = {
+    _id:string;
     name:string;
     description:string;
     brand:string;
     gender: "Men" | 'Women' | 'Kids' | 'Unisex';
     category: string;
     price:number;
+    discount:number;
     colors:string[];
-    sizes:number[];
-    images:string[],
-    status:'available' | 'sold'
+    sizes:string[];
+    images:string[];
+    available:boolean;
+}
+
+export type ProductTable = {
+    name:string;
+    description:string;
+    brand:string;
+    gender: "Men" | 'Women' | 'Kids' | 'Unisex';
+    category: string;
+    price:number;
+    buyingPrice:number;
+    discount:number;
+    colors:string[];
+    sizes:string[];
+    images:string[];
+    available:boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
