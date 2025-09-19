@@ -1,13 +1,13 @@
 'use client'
 
-import { Product } from "@/app/lib/definitions";
+import { ProductTable } from "@/app/lib/definitions";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import DeleteModal from "./delete-button";
 
 export default function ProductsTable() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductTable[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalProductId, setModalProductId] = useState<string | null>(null);
 
@@ -33,7 +33,7 @@ export default function ProductsTable() {
           method: "DELETE",
         });
         if (res.ok) {
-          setProducts(products.filter((product) => product._id !== id));
+           window.location.href = `/dashboard/products`;
         }
       } catch (err) {
         console.error("Error deleting product:", err);
@@ -46,34 +46,34 @@ export default function ProductsTable() {
       <table className='border-collapse border border-slate-400 table-auto w-full text-sm'>
         <thead>
             <tr className="bg-gray-200 text-lg p-2">
-               <th>Product ID</th>
+              
                 <th className="border border-gray-200 p-2">Name</th>
-                <th className="border border-gray-200">B. Price</th>
-                <th className="border border-gray-200">S. Price</th>
-                <th className="border border-gray-200">Stock</th>
-                <th className="border border-gray-200">Edit</th>
-                <th className="border border-gray-200">Delete</th>
+                <th className="border border-gray-200 p-2">B. Price</th>
+                <th className="border border-gray-200 p-2">S. Price</th>
+                <th className="border border-gray-200 p-2">Stock</th>
+                <th className="border border-gray-200 p-2">Edit</th>
+                <th className="border border-gray-200 p-2">Delete</th>
             </tr>
         </thead>
-       <tbody>
-           {products.map((product:Product) =>{
+       <tbody className="mt-2">
+           {products.map((product:ProductTable) =>{
             return(
                 
-                <tr className="hover:bg-gray-100 text-lg text-center p-2" key={product._id}>
-                   <td>{product._id}</td>
-                    
+                <tr className="hover:bg-gray-100 text-lg text-center p-3" key={product.name}>
+                   
+                    <td className="border border-gray-200 p-1">{product.name}</td>
                     <td className="border border-gray-200 p-1" >{product.price}</td>
-                     <td className="border border-gray-200 p-1">{product.price}</td>
+                     <td className="border border-gray-200 p-1">{product.buyingPrice}</td>
                     <td className="border border-gray-200 p-1">{product.available ? <>In Stock</>:<>Out Of Stock</>}</td>
-                    <td className="border border-gray-200">
+                    <td className="border border-gray-200 p-2">
                       <a href={`/dashboard/products/${product._id}` }>
-                        <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2" >Edit</button>
+                        <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2 cursor-pointer hover:bg-blue-700" >Edit</button>
                       </a>
                       
                     </td>
-                    <td className="border border-gray-200">
+                    <td className="border border-gray-200 p-2">
                       <button
-                        className="bg-red-500 text-white px-3 py-1 rounded"
+                        className="bg-red-500 text-white px-3 py-1 rounded cursor-pointer hover:bg-red-700"
                         onClick={() => setModalProductId(product._id)}
                       >
                         Delete
@@ -85,7 +85,7 @@ export default function ProductsTable() {
                             <p>Are you sure you want to delete this product?</p>
                             <div className="mt-4 flex justify-center gap-4">
                               <button
-                                className="bg-red-600 text-white px-4 py-2 rounded"
+                                className="bg-red-300 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-900"
                                 onClick={async () => {
                                   await deleteProduct(product._id);
                                   setModalProductId(null);
@@ -94,7 +94,7 @@ export default function ProductsTable() {
                                 Yes, Delete
                               </button>
                               <button
-                                className="bg-gray-300 px-4 py-2 rounded"
+                                className="bg-gray-300 px-4 py-2 rounded cursor-pointer"
                                 onClick={() => setModalProductId(null)}
                               >
                                 Cancel

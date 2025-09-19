@@ -29,6 +29,7 @@ export type Product = {
 }
 
 export type ProductTable = {
+   _id:string;
     name:string;
     description:string;
     brand:string;

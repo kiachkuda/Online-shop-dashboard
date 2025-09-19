@@ -61,6 +61,7 @@ export default function CreateForm() {
       setImages([]);
       (e.target as HTMLFormElement).reset();
       alert("Product created!");
+      window.location.href = `/dashboard/products`;
     } else {
       alert("Error creating product");
     }
@@ -160,7 +161,7 @@ export default function CreateForm() {
         <input type="file" multiple onChange={handleImageChange} className="w-full rounded-lg p-2 outline-2" />
       </div>
 
-      <button type="submit" className="bg-blue-300 p-2 rounded-md">
+      <button type="submit" className="bg-blue-300 px-8 py-3 font-bold text-xl rounded-md hover:bg-blue-500">
         Submit
       </button>
     </form>

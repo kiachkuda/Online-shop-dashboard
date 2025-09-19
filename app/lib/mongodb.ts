@@ -6,7 +6,7 @@ const options: MongoClientOptions = {
   appName: "devrel.vercel.integration",
 };
 
-let client: MongoClient;
+let client: MongoClient;  
 let clientPromise: Promise<MongoClient> | null = null;
 
 if (uri) {

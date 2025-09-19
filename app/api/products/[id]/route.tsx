@@ -44,3 +44,34 @@ export async function DELETE(
     return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
   }
 }
+
+
+// PUT /api/products/:id
+export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await context.params;
+    const db = await clientDb();
+
+    const formData = await req.formData();
+    const updateData: any = {
+      description: formData.get("description"),
+      price: Number(formData.get("price")),
+      discount: Number(formData.get("discount")),
+      available: formData.get("available") === "true",
+    };
+
+    const res = await db.collection("products").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updateData }
+    );
+
+    if (res.modifiedCount === 0) {
+      return NextResponse.json({ error: "No product updated" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Product updated successfully" }, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+  }
+}
