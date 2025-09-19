@@ -41,7 +41,7 @@ export default function Page(req: NextRequest ){
         formData.append("discount", (e.target as any).discount.value);
         formData.append('available', (e.target as any).available.value)
 
-        try {
+        
           const res = await fetch("/api/products/" + urlpath, {
             method: "PUT",
             body: formData,
@@ -53,9 +53,7 @@ export default function Page(req: NextRequest ){
 
                 window.location.href = `/dashboard/products`;
             }
-        } catch (err) {
-          console.error("Error updating product:", err);
-        }
+       
         };
 
 
