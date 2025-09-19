@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {clientDb} from "@/app/api/products/route";
 import { ObjectId } from "mongodb";
+import { UpdateProductDetails } from "@/app/lib/definitions";
 
 
 // Get /api/products/:id
@@ -53,11 +54,13 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
     const db = await clientDb();
 
     const formData = await req.formData();
-    const updateData: any = {
-      description: formData.get("description"),
+    const descriptionValue = formData.get("description");
+    const updateData: UpdateProductDetails = {
+      description: typeof descriptionValue === "string" ? descriptionValue : "",
       price: Number(formData.get("price")),
       discount: Number(formData.get("discount")),
       available: formData.get("available") === "true",
+      updatedAt: new Date(),
     };
 
     const res = await db.collection("products").updateOne(

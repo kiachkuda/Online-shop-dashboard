@@ -47,3 +47,11 @@ export type ProductTable = {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type UpdateProductDetails = {
+    description:string;
+    price:number;
+    discount:number;
+    available:boolean;
+    updatedAt: Date;
+}
