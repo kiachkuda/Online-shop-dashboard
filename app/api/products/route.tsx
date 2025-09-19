@@ -1,6 +1,7 @@
 // app/api/products/route.ts
 import clientPromise from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
+import { put } from '@vercel/blob'
 
 import { ObjectId } from "mongodb";
 import  path  from "path";
@@ -73,8 +74,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // Save images to server
-    await saveImages(images);
+    // Save images to Vercel Blob in production, or to local server in development
+    let imageUrls: string[] = [];
+    if (process.env.NODE_ENV === "production") {
+      imageUrls = await saveImagesToVercel(images);
+    } else {
+      await saveImages(images);
+      imageUrls = images.map((file) => `/uploads/${file.name}`);
+    }
 
     const newProduct: ProductTable = {
       _id: new ObjectId(),
@@ -114,5 +121,21 @@ async function saveImages(images: File[]) {
     const filePath = path.join(uploadDir, image.name);
     await writeFile(filePath, buffer);
   }));
+}
+
+export async function saveImagesToVercel(images: File[]) {
+  const uploadedUrls: string[] = [];
+
+  for (const image of images) {
+    // Upload to Vercel Blob
+    const blob = await put(image.name, image, {
+      access: "public",          // public URL
+      addRandomSuffix: true,     // avoids overwriting files
+    });
+
+    uploadedUrls.push(blob.url); // Store the URL (save in DB later)
+  }
+
+  return uploadedUrls;
 }
 

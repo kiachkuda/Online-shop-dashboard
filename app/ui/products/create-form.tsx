@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { json } from "stream/consumers";
+import {list} from '@vercel/blob'
 
 export default function CreateForm() {
   const [sizes, setSizes] = useState<string[]>([]);
@@ -49,8 +50,8 @@ export default function CreateForm() {
    
     images.forEach((file) => formData.set("images", file));
 
-    sizes.forEach((size) => formData.append("sizes", size));
-    colors.forEach((color) => formData.append("colors", color));
+    sizes.forEach((size) => formData.set("sizes", size));
+    colors.forEach((color) => formData.set("colors", color));
 
     const res = await fetch("/api/products", {
       method: "POST",
