@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export type User = {
   _id: string;
   name: string;
@@ -29,7 +31,7 @@ export type Product = {
 }
 
 export type ProductTable = {
-   _id:string;
+   _id:ObjectId;
     name:string;
     description:string;
     brand:string;

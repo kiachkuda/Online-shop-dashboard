@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { NextRequest } from "next/server";
 import { ProductTable } from "@/app/lib/definitions";
-import ProductsTable from "@/app/ui/products/table";
-import clsx from "clsx";
+// import ProductsTable from "@/app/ui/products/table";
+// import clsx from "clsx";
 export default function Page(req: NextRequest ){
 
     const [data, setData] = useState<ProductTable>();
-    const [isEditing, setIsEditing] = useState(false);
+    // const [isEditing, setIsEditing] = useState(false);
     const [urlpath, setUrlpath] = useState("");
 
     const  fetchProduct = async(id: string) => {
@@ -28,18 +28,21 @@ export default function Page(req: NextRequest ){
         fetchProduct(id!);
       }, []);
 
-      const updateProduct = async (e: React.FormEvent) => {
+      const updateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const form = e.currentTarget;
         const formData = new FormData();
-        //formData.append("name", (e.target as any).name.value);
-        formData.append("description", (e.target as any).description.value);
+
+        // formData.append("name", form.name. as string);
+        formData.append("description", form.description.value);
         //formData.append("brand", (e.target as any).brand.value);
         //formData.append("gender", (e.target as any).gender.value);
         
         //formData.append("buyingPrice", (e.target as any).buyingPrice.value);
-        formData.append("price", (e.target as any).price.value);
-        formData.append("discount", (e.target as any).discount.value);
-        formData.append('available', (e.target as any).available.value)
+        formData.set("price", form.price.value);
+        formData.set("discount", form.discount.value);
+        formData.set('available', form.available.value)
 
         
           const res = await fetch("/api/products/" + urlpath, {

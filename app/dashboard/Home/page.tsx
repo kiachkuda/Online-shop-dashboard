@@ -1,4 +1,4 @@
-import { ShoppingBagIcon, DocumentDuplicateIcon, CurrencyEuroIcon, ArrowsUpDownIcon, ArrowDownRightIcon } from "@heroicons/react/24/outline"
+
 import Summary from "../../ui/dashboard/summary"
 
 export default function Page() {

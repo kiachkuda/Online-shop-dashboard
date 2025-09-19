@@ -5,11 +5,12 @@ import { ProductTable } from "@/app/lib/definitions";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import DeleteModal from "./delete-button";
+import { ObjectId } from "mongodb";
 
 export default function ProductsTable() {
   const [products, setProducts] = useState<ProductTable[]>([]);
   const [loading, setLoading] = useState(true);
-  const [modalProductId, setModalProductId] = useState<string | null>(null);
+  const [modalProductId, setModalProductId] = useState<ObjectId | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -27,7 +28,7 @@ export default function ProductsTable() {
       }
     }
 
-    const deleteProduct = async (id: string) => {
+    const deleteProduct = async (id: ObjectId) => {
       try {
         const res = await fetch(`/api/products/${id}`, {
           method: "DELETE",
@@ -59,7 +60,7 @@ export default function ProductsTable() {
            {products.map((product:ProductTable) =>{
             return(
                 
-                <tr className="hover:bg-gray-100 text-lg text-center p-3" key={product.name}>
+                <tr className="hover:bg-gray-100 text-lg text-center p-3" key={product._id.toString()}>
                    
                     <td className="border border-gray-200 p-1">{product.name}</td>
                     <td className="border border-gray-200 p-1" >{product.price}</td>

@@ -1,5 +1,5 @@
 import SideNav from '@/app/ui/dashboard/sidenav';
-import UserProfile from '../ui/dashboard/user-profile';
+
 import TopNav from '../ui/dashboard/topnav';
  
 export default function Layout({ children }: { children: React.ReactNode }) {

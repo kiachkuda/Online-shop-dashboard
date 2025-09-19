@@ -1,11 +1,11 @@
 // app/api/products/route.ts
 import clientPromise from "@/app/lib/mongodb";
-import { NextResponse, NextRequest } from "next/server";
-import { shoesData } from "@/app/lib/data";
-import { Product, ProductTable } from "@/app/lib/definitions";
+import { NextResponse } from "next/server";
+
 import { ObjectId } from "mongodb";
 import  path  from "path";
 import { writeFile } from "fs/promises";
+import { ProductTable } from "@/app/lib/definitions";
 
 export async function clientDb(){
     const client = await clientPromise;
@@ -77,12 +77,13 @@ export async function POST(req: Request) {
     await saveImages(images);
 
     const newProduct: ProductTable = {
+      _id: new ObjectId(),
       name: name as string || "",
       description: description as string || "",
       brand: brand as string || "",
       gender: (["Unisex", "Men", "Women", "Kids"].includes(gender as string) ? (gender as "Unisex" | "Men" | "Women" | "Kids") : "Unisex"),
       category: category as string || "",
-      price: parseFloat(price as string) || 0,    
+      price: parseFloat(price as string) || 0,
       buyingPrice: parseFloat(buyingPrice as string) || 0,
       discount: parseFloat(discount as string) || 0,
       sizes: sizes as string[] || [],

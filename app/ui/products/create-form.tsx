@@ -30,20 +30,24 @@ export default function CreateForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", (e.target as any).name.value);
-    formData.append("description", (e.target as any).description.value);
-    formData.append("brand", (e.target as any).brand.value);
-    formData.append("gender", (e.target as any).gender.value);
+    const form = e.currentTarget;
+
+    const formData = new FormData(e.currentTarget);
+    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
     
-    formData.append("buyingPrice", (e.target as any).buyingPrice.value);
-    formData.append("price", (e.target as any).sellingPrice.value);
-    formData.append("discount", (e.target as any).discount.value);
    
-    images.forEach((file) => formData.append("images", file));
+    formData.append("description", form.description.value);
+    formData.set("brand", form.brand.value);
+    formData.set("gender", form.gender.value);
+     formData.set("name", name);
+    formData.set("buyingPrice", form.buyingPrice.value);
+    formData.set("price", form.sellingPrice.value);
+    formData.set("discount", form.discount.value);
+   
+    images.forEach((file) => formData.set("images", file));
 
     sizes.forEach((size) => formData.append("sizes", size));
     colors.forEach((color) => formData.append("colors", color));
