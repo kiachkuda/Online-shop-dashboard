@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { json } from "stream/consumers";
-import {list} from '@vercel/blob'
+
 
 export default function CreateForm() {
   const [sizes, setSizes] = useState<string[]>([]);

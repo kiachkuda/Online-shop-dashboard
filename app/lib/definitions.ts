@@ -1,22 +1,27 @@
 import { ObjectId } from "mongodb";
 
 export type User = {
-  _id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  password: string;
+  _id: ObjectId;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  password?: string;
+  verified?: boolean;
+  otp?: string | null;
+  otpExpiry?: Date | null;
+  resetPasswordToken?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type Customer = {
-  _id: string;
+  _id: ObjectId;
   name: string;
   email: string;
-  image_url: string;
 };
 
 export type Product = {
-    _id:string;
+    _id:ObjectId;
     name:string;
     description:string;
     brand:string;
