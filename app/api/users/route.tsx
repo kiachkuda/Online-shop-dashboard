@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
 import { User } from "@/app/lib/definitions";
 import nodemailer from "nodemailer";
+import cookie from "cookie";
 
 export async function POST(req: Request) {
   try {
@@ -84,10 +85,16 @@ export async function POST(req: Request) {
 
     await db.collection("users").insertOne(user);
 
-    return NextResponse.json(
+
+
+    const res = NextResponse.json(
       { message: "User registered successfully" },
       { status: 201 }
     );
+    res.headers.set("set-cookie", cookie.serialize("email", email, { path: '/' , httpOnly: true, maxAge: 4 * 60 * 60 }));
+
+    return res;
+
   } catch (error) {
     return NextResponse.json(
       { error: "Internal Server Error", details: String(error) },

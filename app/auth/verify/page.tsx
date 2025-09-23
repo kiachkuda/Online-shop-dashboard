@@ -1,5 +1,8 @@
 'use client'
 import React, { useState } from "react";
+import { NextResponse, NextRequest as req } from "next/server";
+
+
 
 const OTP_LENGTH = 6;
 
@@ -10,14 +13,22 @@ export default function VerifyPage() {
     const [email, setEmail] = useState("");
 
     React.useEffect(() => {
-        // Extract email from URL query parameters
-        if (typeof window !== "undefined") {
-            const params = new URLSearchParams(window.location.search);
-            const emailParam = params.get("email");
-            if (emailParam) {
-                setEmail(emailParam);
+        const fetchEmail = async () => {
+            try {
+                const res = await fetch("/api/auth/getcookies", { method: "GET"  });
+                if (res.ok) {
+                    const data = await res.json();
+                    setEmail(data.email);
+                    console.log("Fetched email:", data.email);
+                } else {
+                    setError("Failed to fetch email from cookies.");
+                }
+            } catch (err) {
+                setError("An error occurred while fetching email.");
             }
-        }
+        };
+        fetchEmail();
+        
     }, []);
 
     const handleChange = (value: string, idx: number) => {
@@ -40,17 +51,52 @@ export default function VerifyPage() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
         if (otp.some((digit) => digit === "")) {
             setError("Please enter all 6 digits.");
             setSuccess(false);
             return;
         }
-        setError("");
-        setSuccess(true);
-        const email = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("email") : null;
-        console.log("Verifying OTP for email:", email);
+
+        try{
+                const res = await fetch("/api/users/verify", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ otp: otp.join("") }),
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                setError(data.error || "Verification failed.");
+                setSuccess(false);
+                 return;
+            }else{
+                 setSuccess(true);
+                 setError("");
+                    // Redirect to login page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = `/auth/login`
+                    }, 2000);
+                    return;
+            }
+             
+       
+        }catch(err){
+            setError("An error occurred during verification.");
+            setSuccess(false);
+            return;
+        }
+            
+            
+
+            
+        
+
+       
+        
         // Add your verification logic here
     };
 
@@ -64,7 +110,7 @@ export default function VerifyPage() {
                 <p className="mb-4 text-gray-600 text-center">
                     Enter the 6-digit code sent to.
                 </p>
-                <p className="mb-4 text-gray-600 text-center">{email}</p>
+                <p className="mb-4 text-gray-600 text-center font-bold">{email}</p>
                 <div className="flex justify-center gap-2 mb-4">
                     {otp.map((digit, idx) => (
                         <input

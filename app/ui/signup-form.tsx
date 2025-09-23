@@ -39,7 +39,7 @@ export default function SignUpForm() {
         const password = (form.elements.namedItem("password") as HTMLInputElement).value;
 
 
-        
+       
 
         const res = await fetch("/api/users", {
             method: "POST",
@@ -60,7 +60,7 @@ export default function SignUpForm() {
             setMsg(data.message)
             // Redirect to verify page after 2 seconds
             setTimeout(() => {
-                window.location.href = `/auth/verify?email=${encodeURIComponent(email)}`;
+                window.location.href = `/auth/verify`
             }, 2000);
            
         }else{
