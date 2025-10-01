@@ -5,6 +5,7 @@ export type User = {
   firstname?: string;
   lastname?: string;
   email?: string;
+  role?: 'user' | 'admin';
   password?: string;
   verified?: boolean;
   otp?: string | null;
@@ -16,7 +17,8 @@ export type User = {
 
 export type Customer = {
   _id: ObjectId;
-  name: string;
+  firstname?: string;
+  lastname?: string;
   email: string;
 };
 

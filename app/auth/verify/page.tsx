@@ -61,7 +61,7 @@ export default function VerifyPage() {
         }
 
         try{
-                const res = await fetch("/api/users/verify", {
+                const res = await fetch("/api/auth/verify", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -90,14 +90,6 @@ export default function VerifyPage() {
             return;
         }
             
-            
-
-            
-        
-
-       
-        
-        // Add your verification logic here
     };
 
     return (

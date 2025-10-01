@@ -17,8 +17,9 @@ export default function UserProfile() {
 
     const handleImageClick = () => setShowDetails((prev) => !prev);
 
-    const handleLogout = () => {
-        alert("Logged out!");
+    const handleLogout = async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = '/login'; // Redirect to login after logout
     };
 
     return (
@@ -65,7 +66,7 @@ export default function UserProfile() {
                     </div>
                     <div
                         onClick={handleLogout}
-                        className="flex flex-row gap-2 w-full p-2 rounded-sm text-white bg-red-400"
+                        className="flex flex-row gap-2 w-full p-2 rounded-sm text-white bg-red-400 cursor-pointer hover:bg-red-500"
                     >
                        <PowerIcon className="w-6" /> 
                        <span>Logout</span>

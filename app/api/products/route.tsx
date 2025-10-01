@@ -8,10 +8,13 @@ import  path  from "path";
 import { writeFile } from "fs/promises";
 import { ProductTable } from "@/app/lib/definitions";
 
+
 export async function clientDb(){
     const client = await clientPromise;
     if(!client) {
       throw new Error("Failed to connect to MongoDB client");
+    }else{
+      console.log("MongoDB Client connected");
     }
     const db = client.db("mtush-db"); // change to your DB name
     return db;
@@ -37,8 +40,8 @@ export async function POST(req: Request) {
     const formData= await req.formData();
     const db = await clientDb();
 
-    const name = formData.get('name');
-    const description = formData.get('description');
+    const name = formData.get('name') as string;
+    const description = formData.get('description')  as string;
     const brand = formData.get('brand');
     const gender = formData.get('gender');
     const category = formData.get('category');
