@@ -1,60 +1,51 @@
-import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import crypto from "crypto";
-import jwt from "jsonwebtoken";
-
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { clientDb } from "../../products/route";
 
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const db = await clientDb();
 
-    const { email } = await req.json();
+    const db =  await clientDb();
+    const { code, newPassword } = await req.json();
 
-    if (!email) {
-      return NextResponse.json({ message: "Email is required" }, { status: 400 });
+    if (!code || !newPassword) {
+      return NextResponse.json(
+        { message: "Code and new password are required" },
+        { status: 400 }
+      );
     }
 
-    const user = await db.collection('users').findOne({ email });
+    // Ensure DB is connected
+    const user = await db.collection('users').findOne({
+      resetCode: code,
+      resetCodeExpiry: { $gt: Date.now() },
+    });
+
     if (!user) {
-      return NextResponse.json({ message: "Email not registered" }, { status: 403 });
+      return NextResponse.json(
+        { message: "Invalid or expired code" },
+        { status: 400 }
+      );
     }
 
-    // Generate a 6-digit code
-    const verificationCode = crypto.randomInt(100000, 999999).toString();
+    const salt = await bcrypt.genSalt(10);
+    const password_hash = await bcrypt.hash(newPassword, salt);
 
-    // Save to user record
-    user.resetCode = verificationCode;
-    user.resetCodeExpiry = Date.now() + 15 * 60 * 1000; // expires in 15 min
-    await user.save();
+   
 
-    // Configure email transport
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    await db.collection('users').updateOne(
+      { _id: user._id },
+      { $set: { password: password_hash, resetCode: null, resetCodeExpiry: null } }
+    );
 
-    // Email details
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: "Your Password Reset Verification Code",
-      text: `Your verification code is: ${verificationCode}`,
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    return NextResponse.json({
-      message: "Verification code sent to your email.",
-    });
-  } catch (err: any) {
-    console.error("Error in forgot-password route:", err);
     return NextResponse.json(
-      { message: err.message || "Internal server error" },
+      { message: "Password reset successfully" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error.message },
       { status: 500 }
     );
   }

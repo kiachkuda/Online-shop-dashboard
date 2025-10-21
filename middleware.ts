@@ -34,12 +34,12 @@ export function middleware(req: NextRequest) {
     }
 
     // If not admin, redirect or show unauthorized page
-    return NextResponse.redirect(new URL('/unauthorised', req.url));
+    return NextResponse.redirect(new URL('/login', req.url));
 
 
   } catch (err) {
     console.error("JWT verification failed:", err);
-    return NextResponse.redirect(new URL('/help', req.url));
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 }
 

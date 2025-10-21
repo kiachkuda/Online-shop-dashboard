@@ -1,50 +1,65 @@
-import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+
+
+import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+
 import { clientDb } from "../../products/route";
 
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const db = await clientDb();
 
-    const db =  await clientDb();
-    const { code, newPassword } = await req.json();
+    const { email } = await req.json();
 
-    if (!code || !newPassword) {
-      return NextResponse.json(
-        { message: "Code and new password are required" },
-        { status: 400 }
-      );
+    if (!email) {
+      return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
-    // Ensure DB is connected
-    const user = await db.collection('users').findOne({
-      resetCode: code,
-      resetCodeExpiry: { $gt: Date.now() },
+    const user = await db.collection('users').findOne({ email });
+    if (!user) {
+      return NextResponse.json({ message: "Email not registered" }, { status: 403 });
+    }
+
+    // Generate a 6-digit code
+    const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+    // Save to user record
+    user.resetCode = verificationCode;
+    user.resetCodeExpiry = Date.now() + 15 * 60 * 1000; // expires in 15 min
+    await db.collection('users').updateOne(
+      { _id: user._id },
+      { $set: { resetCode: user.resetCode, resetCodeExpiry: user.resetCodeExpiry } }
+    );
+
+    // Configure email transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { message: "Invalid or expired code" },
-        { status: 400 }
-      );
-    }
+    // Email details
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Your Password Reset Verification Code",
+      text: `Your verification code is: ${verificationCode} click on the link to reset your password: http://192.168.0.104:3000/auth/resetPassword. This code will expire in 15 minutes.`,
+    };
 
-    const salt = await bcrypt.genSalt(10);
-    user.password_hash = await bcrypt.hash(newPassword, salt);
+    await transporter.sendMail(mailOptions);
 
-    // Clear reset fields
-    user.resetCode = undefined;
-    user.resetCodeExpiry = undefined;
-
-    await user.save();
-
+    return NextResponse.json({
+      message: "Verification code sent to your email.",
+    });
+  } catch (err: any) {
+    console.error("Error in forgot-password route:", err);
     return NextResponse.json(
-      { message: "Password reset successfully" },
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return NextResponse.json(
-      { message: error.message },
+      { message: err.message || "Internal server error" },
       { status: 500 }
     );
   }

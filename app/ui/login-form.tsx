@@ -45,13 +45,14 @@ export default function LoginForm() {
         // Redirect or update UI on successful login
         router.push('/dashboard');
         setSuccess(true);
+         setTimeout(() => { setSuccess(false); }, 3000); // 
         setError('');
     } else {
         const errorData = await res.json();
         console.error("Login failed:", errorData);
         // Show error message to the user
         setError(errorData.error);
-        setTimeout(() => { setError(''); }, 3000); // Clear error after 5 secondss
+        setTimeout(() => { setError(''); }, 5000); // Clear error after 5 seconds
     }
   }
 
@@ -130,7 +131,7 @@ export default function LoginForm() {
         </div>
         <div className="mt-4 text-center text-sm text-gray-500">
           <a
-            href="/auth/forgot-password"
+            href="/auth/forget-password"
             className="text-blue-600 underline transition hover:text-blue-700"
           >
             Forgot password?
