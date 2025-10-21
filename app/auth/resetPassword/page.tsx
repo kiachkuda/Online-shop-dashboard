@@ -4,17 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
-  const [code, setCode] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    const router = useRouter();
+    
     setError("");
         const form = e.currentTarget;
         const formData = new FormData();
@@ -27,8 +26,7 @@ export default function ResetPasswordPage() {
         body: JSON.stringify({ code, newPassword }),
       });
 
-      let data
-      = await res.json();
+      const data = await res.json();
       
       if (!res.ok) throw new Error(data.message || "Failed to reset password");
 
