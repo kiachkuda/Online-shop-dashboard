@@ -35,7 +35,7 @@ const data = {
 const BarChart = () => {
   return (
     <div className='p-2 w-full shadow-lg border rounded-lg'>
-      <h1>Bar Chart</h1>
+      <h1 className='text-xl font-bold'>Monthly Sale</h1>
       <Bar data={data} />
     </div>
   );

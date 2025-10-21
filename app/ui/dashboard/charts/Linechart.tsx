@@ -25,7 +25,7 @@ const LineChart = () => {
    };
    return( 
    <div className='p-2 w-full shadow-lg border rounded-lg'>
-      <h1>Line Chart</h1>
+      <h1 className="text-xl font-bold">Monthly Income</h1>
       <Line data={data}  />;
     </div>
    )
