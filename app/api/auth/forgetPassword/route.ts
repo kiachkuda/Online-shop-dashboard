@@ -56,10 +56,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: "Verification code sent to your email.",
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error("Error in forgot-password route:", err);
     return NextResponse.json(
-      { message: err.message || "Internal server error" },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }

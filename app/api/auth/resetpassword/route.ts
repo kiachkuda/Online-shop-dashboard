@@ -43,9 +43,9 @@ export async function POST(req: Request) {
       { message: "Password reset successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { message: error.message },
+      { message: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 }
     );
   }
