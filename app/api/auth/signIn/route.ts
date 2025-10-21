@@ -7,14 +7,13 @@ import cookie  from 'cookie';
 
 export async function POST(req: NextRequest) {
     try {
+        // Database connection
+        const db = await clientDb();
         const { email, password } = await req.json();
 
         if (!email || !password) {
             return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
         }
-
-        // Database connection
-        const db = await clientDb();
 
         // Find user by email
         const user = await db.collection('users').findOne({ email: email });
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
             httpOnly: true, // Cookie cannot be accessed via JavaScript
             secure: process.env.NODE_ENV === 'production', // Secure only in production
             sameSite: 'strict', // Avoid CSRF attacks
-            maxAge: 60 * 60, // 1 hour expiration
+            maxAge: 60 * 60 * 1000, // 1 hour expiration
             path: '/', // Cookie is accessible throughout the site
         } )); 
 

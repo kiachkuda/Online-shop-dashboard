@@ -5,14 +5,19 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 
+
+const roleAccess: Record<string, string[]> = {
+  admin: ['/dashboard', '/admin'],
+  user: ['/home'],
+};
+
+
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value;
 
   if (!token) {
     // Redirect to login if no token
     return NextResponse.redirect(new URL('/login', req.url));
-  }else{
-    console.log("Token found in cookies:", token);
   }
 
   try {
@@ -23,8 +28,14 @@ export function middleware(req: NextRequest) {
       return NextResponse.next(); // allow access
     }
 
+    //if the session has expired
+    if(typeof decoded === 'object' && decoded.exp && Date.now() >= decoded.exp * 1000){
+        return NextResponse.redirect(new URL('/login', req.url));
+    }
+
     // If not admin, redirect or show unauthorized page
     return NextResponse.redirect(new URL('/unauthorised', req.url));
+
 
   } catch (err) {
     console.error("JWT verification failed:", err);
@@ -34,5 +45,5 @@ export function middleware(req: NextRequest) {
 
 // Apply middleware only on dashboard routes
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/home/:path*'],
 };

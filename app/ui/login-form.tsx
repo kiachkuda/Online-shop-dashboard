@@ -26,7 +26,7 @@ export default function LoginForm() {
     const formData = new FormData();
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-    console.log("Email:", email, "Password:", password);
+    
     // You can add your authentication logic here
     const res = await fetch("/api/auth/signIn", {
         method: "POST",

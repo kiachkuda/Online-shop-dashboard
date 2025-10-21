@@ -210,6 +210,8 @@ export default function SignUpForm() {
                 <Button className="mt-4 w-full">
                     Sign Up <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                 </Button>
+
+                <p className='mt-5'>Already have an account? <a className='text-blue-600 underline transition hover:text-blue-700' href='/login'>Login here</a></p>
                 
             </div>
         </form>
