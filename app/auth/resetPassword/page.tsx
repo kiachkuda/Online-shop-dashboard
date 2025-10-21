@@ -33,8 +33,9 @@ export default function ResetPasswordPage() {
       
       setTimeout(() => { setMessage(data.message || "Password reset successfully!"); router.push('/login') }, 5000); // Clear message after 5 seconds
       
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : typeof err === "string" ? err : JSON.stringify(err);
+            setError("Failed::" + errMsg);
     } finally {
       setLoading(false);
     }

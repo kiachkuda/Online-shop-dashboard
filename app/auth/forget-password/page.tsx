@@ -36,8 +36,9 @@ export default function ForgotPasswordPage() {
             setMessage("✅ Verification code sent to your email.");
             
             router.push('/auth/resetPassword');
-        } catch (err: any) {
-            setError("Failed::" + err.message);
+        } catch (err) {
+            const errMsg = err instanceof Error ? err.message : typeof err === "string" ? err : JSON.stringify(err);
+            setError("Failed::" + errMsg);
         } finally {
             setLoading(false);
         }
