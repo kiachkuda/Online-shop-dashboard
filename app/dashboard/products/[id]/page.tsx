@@ -15,7 +15,7 @@ export default function Page(req: NextRequest ){
       try {
         const res = await fetch("/api/products/"+id);
         setData(await res.json());
-        
+        console.log(await res.json())
       } catch (err) {
         console.error("Error fetching products:", err);
       } 

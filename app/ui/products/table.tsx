@@ -26,7 +26,7 @@ export default function ProductsTable() {
       } finally {
         setLoading(false);
       }
-    }
+  }
 
     const deleteProduct = async (id: ObjectId) => {
       try {
