@@ -1,0 +1,37 @@
+CREATE TABLE brands (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT,
+  parent_id INT DEFAULT NULL, -- optional parent category for nested structure
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  brand_id INT NOT NULL,
+  category_id INT NOT NULL,
+  sku VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  material VARCHAR(100) NULL,
+  color VARCHAR(50),
+  gender ENUM('Male', 'Female', 'Unisex') DEFAULT 'Unisex',
+  size VARCHAR(50),
+  price DECIMAL(10,2) NOT NULL,
+  discount_price DECIMAL(10,2) DEFAULT NULL,
+  stock_quantity INT DEFAULT 0,
+  imageUrls JSON, -- stores JSON array from JSON.stringify(imageUrls)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (brand_id) REFERENCES brands(id),
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+) ENGINE=InnoDB;

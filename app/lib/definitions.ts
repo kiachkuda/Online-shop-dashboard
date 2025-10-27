@@ -22,20 +22,23 @@ export type Customer = {
   email: string;
 };
 
-export type Product = {
-    _id:ObjectId;
-    name:string;
-    description:string;
-    brand:string;
-    gender: "Men" | 'Women' | 'Kids' | 'Unisex';
-    category: string;
-    price:number;
-    discount:number;
-    colors:string[];
-    sizes:string[];
-    images:string[];
-    available:boolean;
+export interface Product {
+  id: number;
+  brand: string;           
+  category: string;         
+  name: string;             
+  description?: string;     
+  color: string[];          
+  size: string;             
+  gender: "Male" | "Female" | "Unisex"; 
+  price: number;
+  sku : string;            
+  discount_price: number;   
+  stock_quantity: number;   
+  imageUrls: string[];      
 }
+
+
 
 export type ProductTable = {
    _id:ObjectId;
@@ -45,14 +48,27 @@ export type ProductTable = {
     gender: "Men" | 'Women' | 'Kids' | 'Unisex';
     category: string;
     price:number;
-    buyingPrice:number;
     discount:number;
-    colors:string[];
+    color:string[];
     sizes:string[];
-    images:string[];
+    imageUrls:string[];
     available:boolean;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export type ProductDetails = {
+  name : string;
+  description: string;
+  brand:string;
+  gender: "Men" | 'Women' | 'Kids' | 'Unisex';
+  category: string;
+  price:number;
+  discount:number;
+  colors:string[];
+  sizes:string[];
+  images:string[];
+  available:boolean;
 }
 
 export type UpdateProductDetails = {
@@ -62,3 +78,4 @@ export type UpdateProductDetails = {
     available:boolean;
     updatedAt: Date;
 }
+

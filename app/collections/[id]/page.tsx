@@ -1,4 +1,5 @@
 "use client";
+import { Product, ProductTable } from "@/app/lib/definitions";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -8,37 +9,66 @@ export default function ProductPage() {
 
     const [images, setImages] = useState<string[]>([]);
     const [colors, setColors] = useState<string[]>([]);
-    const [data, setData] = useState<any>();
+    const [data, setData] = useState<Product | null>(null);
     const [selectedImage, setSelectedImage] = useState(images[0]);
     const [selectedColor, setSelectedColor] = useState(colors[0]);
 
     const fetchProduct = async (id: string) => {
         try {
-            const res = await fetch("/api/products/" + id);
-            setImages((await res.json()).images);
-            setData(res.json());
+            const res = await fetch("http://localhost:5000/api/v1/products/" + id);
+            //console.log(await res.json())
+
+            const product : Product = await res.json();
+           
+            product.imageUrls =
+                typeof product.imageUrls === "string"
+                ? JSON.parse(product.imageUrls)
+                : product.imageUrls;
+
+            product.color =
+                typeof product.color === "string"
+                ? JSON.parse(product.color)
+                : product.color;
+
+            setData(product); // ✅ set state here after formatting
+            setImages(product?.imageUrls);
+            console.log(product)
             
+           
         } catch (err) {
             console.error("Error fetching products:", err);
         }
     }
+
+    
     useEffect(() => {
         // Pick Id from the URL
         const url = new URL(window.location.href);
-        const id = url.pathname.split("/").pop();
+        const id : string | undefined = url.pathname.split("/").pop();
+
         //setUrlpath(id!);
         fetchProduct(id!);
+        setSelectedImage(images[0])
+       
        
     }, []);
+     useEffect(() => {
+    if (data) {
+        setSelectedImage(data?.imageUrls[0]);
+        setSelectedColor(data?.color[0])
+    } 
+    
+    
+  }, [data]);
 
     return (
-        <div className="min-h-screen px-4 py-10 md:px-16 bg-white">
+        <div className="lg:min-h-screen px-4 py-10 md:px-16 bg-white">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {/* LEFT — IMAGE SECTION */}
                 <div className="flex flex-col md:flex-row gap-4">
                     {/* Thumbnail List */}
                     <div className="flex md:flex-col gap-2 justify-center">
-                        {images.map((img) => (
+                        {data?.imageUrls.map((img) => (
                             <button
                                 key={img}
                                 onClick={() => setSelectedImage(img)}
@@ -48,8 +78,7 @@ export default function ProductPage() {
                                 <Image
                                     src={`/uploads/${img}`}
                                     alt="Product"
-                                    width={80}
-                                    height={80}
+                                    width={80}                                    height={80}
                                     className="object-cover"
                                 />
                             </button>
@@ -74,14 +103,14 @@ export default function ProductPage() {
                         Home / Collections / For Him
                     </div>
                     <h1 className="text-3xl font-serif mb-4">
-                        Personalised Leather Hip Flask – 180ml
+                        {data?.name}
                     </h1>
 
                     {/* COLOR SELECTION */}
                     <div className="mb-4">
-                        <p className="font-semibold mb-2">Color — Cream</p>
+                        <p className="font-semibold mb-2">Color — {selectedColor}</p>
                         <div className="flex gap-2">
-                            {["cream", "brown"].map((color) => (
+                            {data?.color.map((color) => (
                                 <button
                                     key={color}
                                     onClick={() => setSelectedColor(color)}
@@ -90,7 +119,7 @@ export default function ProductPage() {
                                             : "border-gray-300"
                                         }`}
                                     style={{
-                                        backgroundColor: color === "cream" ? "#f5deb3" : "#a0522d",
+                                        backgroundColor: `${color}`,
                                     }}
                                 />
                             ))}

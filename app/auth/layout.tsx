@@ -1,3 +1,4 @@
+import Link  from "next/link";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -5,8 +6,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="w-full flex flex-col md:w-full">
         
             <nav className="md:pl-12 justify-center md:py-5">
-                <a href='/' className="text-2xl font-bold">
-                    Mtush</a>
+                <Link href='/' className="text-2xl font-bold">
+                    Mtush</Link>
             </nav>
        
        <div className="flex-grow p-6 md:overflow-y-auto md:p-12 shadow-sm ">{children}</div>
