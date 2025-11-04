@@ -69,7 +69,7 @@ export default function ProductPage() {
             quantity: 1
           }
 
-          //setProduct(prods)
+          setProduct(prods)
           console.log(prods)
         }
 
@@ -80,9 +80,9 @@ export default function ProductPage() {
         <div className="lg:min-h-screen px-4 py-10 md:px-16 bg-white">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {/* LEFT — IMAGE SECTION */}
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col   gap-4">
                     {/* Thumbnail List */}
-                    <div className="flex md:flex-col gap-2 justify-center">
+                    <div className="flex md:flex-row flex-row gap-2 justify-center">
                         {data?.imageUrls.map((img) => (
                             <button
                                 key={img}
@@ -93,7 +93,8 @@ export default function ProductPage() {
                                 <Image
                                     src={`/uploads/${img}`}
                                     alt="Product"
-                                    width={80} height={80}
+                                    width={80} 
+                                    height={80}
                                     className="object-cover"
                                 />
                             </button>
@@ -101,12 +102,13 @@ export default function ProductPage() {
                     </div>
 
                     {/* Main Image */}
-                    <div className="flex-1">
+                    <div className="flex-1 aspect-[16/9]  md:block">
                         <Image
                             src={`/uploads/${selectedImage}`}
                             alt="Main Product"
                             width={600}
                             height={600}
+                            priority 
                             className="object-cover rounded-lg shadow-sm w-full"
                         />
                     </div>
@@ -123,13 +125,6 @@ export default function ProductPage() {
                     </h1>
                     {/* DESCRIPTION */}
 
-                    <div>
-                        {cartItems.map( (item) => <>
-                        <p key={item.id}>{item.id}</p>
-                        </>
-                         )}
-
-                    </div>
 
                    
                     {/* COLOR SELECTION */}

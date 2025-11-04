@@ -30,14 +30,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addToCart = (product: CartItem, quantity: number = 1) => {
     setCartItems((prev) => {
-      // const existing = prev.find((item) => item.id === product.id);
-      // if (existing) {
-      //   return prev.map((item) =>
-      //     item.id === product.id
-      //       ? { ...item, quantity: item.quantity + quantity }
-      //       : item
-      //   );
-      // }
+      const existing = prev.find((item) => item.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
       return [...prev, { ...product, quantity }];
     });
   };

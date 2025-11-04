@@ -4,10 +4,13 @@ import { useState } from "react";
 import { UserIcon,  ShoppingCartIcon, MagnifyingGlassIcon} from '@heroicons/react/24/outline';
 import SearchBar from "./SearchBar";
 import Logo from "./Logo";
+import { useCart } from "@/context/CartProvider";
+import Link from "next/link";
 
 export default function Header() {
 
   const [items, setItems] = useState(0);
+  const {cartItems} = useCart();
  
   return (
     <header className="w-full bg-white shadow-md px-2 md:px-6 py-3 flex gap-3 items-center justify-between sticky top-0 z-50">
@@ -26,9 +29,9 @@ export default function Header() {
         </div>
 
         <div className="flex gap-5 relative cursor-pointer">
-          <ShoppingCartIcon className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition" />
+          <Link href="/cart"><ShoppingCartIcon className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition" /></Link>
           <span className="absolute -top-2 -left-1 bg-red-500 text-white text-xs font-semibold rounded-full h-4 w-4 flex items-center justify-center">
-            {items}
+            {cartItems.length}
           </span>
           <span className="text-md text-black transition hidden sm:hidden md:block">
             Cart

@@ -31,9 +31,10 @@ export default function ProductCard({
         <Image
           src={images[0] ? `/uploads/${images[0]}` : "/uploads/placeholder.png"}
           alt={name}
-          width={300}
+          width={250}
           height={256}
-          className="object-contain h-full w-full"
+          priority
+          className="object-contain"
         />
       </Link>
 
