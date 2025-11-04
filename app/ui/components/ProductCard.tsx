@@ -5,6 +5,7 @@ import { Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { useCart } from "@/context/CartProvider";
 
 
 
@@ -16,9 +17,13 @@ export default function ProductCard({
   sku,
 }: Product) {
 
+
+
   const images: string[] = Array.isArray(imageUrls)
-  ? imageUrls
-  : (JSON.parse(imageUrls || "[]") as string[]);
+    ? imageUrls
+    : (JSON.parse(imageUrls || "[]") as string[]);
+
+   
   return (
     <div className="w-60 xl:w-72 md:w-56 m-auto sm:m-auto bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
       {/* Image */}
@@ -30,13 +35,13 @@ export default function ProductCard({
           height={256}
           className="object-contain h-full w-full"
         />
-        </Link>
-    
+      </Link>
+
 
       {/* Details */}
       <div className="p-3">
-        Price 
-         <div className="flex items-center gap-2">
+        Price
+        <div className="flex items-center gap-2">
           <span className="text-2xl font-semibold">${price.toFixed(2)}</span>
           {/* {oldPrice && (
             <span className="text-gray-400 line-through text-sm">${oldPrice.toFixed(2)}</span>

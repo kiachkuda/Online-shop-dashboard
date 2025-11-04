@@ -79,3 +79,19 @@ export type UpdateProductDetails = {
     updatedAt: Date;
 }
 
+export interface CartItem {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+}
+
+export interface CartContextType {
+  cartItems: CartItem[];
+  addToCart: (product: CartItem) => void;
+  updateQuantity: (id: number, amount: number) => void;
+  removeItem: (id: number) => void;
+  clearCart: () => void;
+  subtotal: number;
+}

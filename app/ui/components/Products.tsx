@@ -10,7 +10,7 @@ export default function ProductGrid() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(10); // number of products per page
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState('DESC');
   
 
   useEffect(() => {
@@ -19,21 +19,21 @@ export default function ProductGrid() {
 
   const fetchProducts = async (page: number) => {
     setLoading(true);
-
+try {
     const query = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
           sort,
         });
    
-    try {
+    
       const res = await fetch(
         `http://localhost:5000/api/v1/products?${query.toString()}`
       );
       const data = await res.json();
       // Extract directly based on your response structure
-      console.log(data.results);
-       setProducts(data.results);
+      console.log("data.results");
+      setProducts(data.results);
       setCurrentPage(data.current_page || 1);
       setTotalPages(data.total_pages || 1);
     } catch (err) {

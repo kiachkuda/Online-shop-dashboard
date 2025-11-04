@@ -1,26 +1,29 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-
-const images = [
-  "/images/flask1.jpg",
-  "/images/flask2.jpg",
-  "/images/flask3.jpg",
-  "/images/flask4.jpg",
-];
+import { useCart } from "@/context/CartProvider";
+import { CartItem, Product } from "../lib/definitions";
 
 
 
 export default function ProductPage() {
 
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<Product>();
+  const [images, setImages] = useState<string[]>([])
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [selectedColor, setSelectedColor] = useState("cream");
+
+ 
+
+  const addToCart = useCart();
 
   const  fetchProduct = async(id: string) => {
         try {
           const res = await fetch("/api/v1/products/"+id);
           setData(await res.json());
+          console.log(data)
+
+          
           return data;
         } catch (err) {
           console.error("Error fetching products:", err);
@@ -32,11 +35,13 @@ export default function ProductPage() {
           const id = url.pathname.split("/").pop();
           //setUrlpath(id!);
           fetchProduct(id!);
+         
         }, []);
 
   return (
-    <div className="min-h-screen px-4 py-10 md:px-16 bg-white">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div className="px-4 py-10 md:px-16 bg-white">
+      <div className="flex flex-row md:flex-col gap-10">
+
         {/* LEFT — IMAGE SECTION */}
         <div className="flex flex-col md:flex-row gap-4">
           {/* Thumbnail List */}
@@ -62,13 +67,26 @@ export default function ProductPage() {
 
           {/* Main Image */}
           <div className="flex-1">
-            <Image
-              src={selectedImage}
-              alt="Main Product"
-              width={600}
-              height={600}
-              className="object-cover rounded-lg shadow-sm w-full"
-            />
+            <div className="hidden">
+              <Image
+                src={selectedImage}
+                alt="Main Product"
+                width={600}
+                height={600}
+                className="object-cover rounded-lg shadow-sm w-full"
+              />
+            </div>
+
+            <div className="md:hidden">
+              <Image
+                src={selectedImage}
+                alt="Main Product"
+                width={400}
+                height={400}
+                className="object-cover rounded-lg shadow-sm w-full"
+              />
+            </div>
+            
           </div>
         </div>
 
@@ -125,10 +143,15 @@ export default function ProductPage() {
           </div>
 
           {/* ADD TO CART BUTTON */}
-          <button className="bg-black text-white py-4 rounded-md w-full font-medium hover:opacity-90 transition">
-            Add to my cart
+          <button
+           className="bg-black cursor-pointer text-white py-4 
+              rounded-md w-full font-medium " 
+          
+           >
+            Add to cart
           </button>
         </div>
+
       </div>
     </div>
   );

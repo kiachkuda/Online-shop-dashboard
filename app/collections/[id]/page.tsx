@@ -1,7 +1,8 @@
 "use client";
-import { Product, ProductTable } from "@/app/lib/definitions";
+import { Product, ProductTable, CartItem } from "@/app/lib/definitions";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useCart } from "@/context/CartProvider";
 
 
 
@@ -13,53 +14,67 @@ export default function ProductPage() {
     const [selectedImage, setSelectedImage] = useState(images[0]);
     const [selectedColor, setSelectedColor] = useState(colors[0]);
 
+    const [product, setProduct] = useState<CartItem>();
+    const {addToCart, cartItems} = useCart();
+
     const fetchProduct = async (id: string) => {
         try {
             const res = await fetch("http://localhost:5000/api/v1/products/" + id);
             //console.log(await res.json())
 
-            const product : Product = await res.json();
-           
+            const product: Product = await res.json();
+
             product.imageUrls =
                 typeof product.imageUrls === "string"
-                ? JSON.parse(product.imageUrls)
-                : product.imageUrls;
+                    ? JSON.parse(product.imageUrls)
+                    : product.imageUrls;
 
             product.color =
                 typeof product.color === "string"
-                ? JSON.parse(product.color)
-                : product.color;
+                    ? JSON.parse(product.color)
+                    : product.color;
 
             setData(product); // ✅ set state here after formatting
             setImages(product?.imageUrls);
             console.log(product)
+            console.log("data", product!.id)
             
-           
+
         } catch (err) {
             console.error("Error fetching products:", err);
         }
     }
 
-    
+
     useEffect(() => {
         // Pick Id from the URL
         const url = new URL(window.location.href);
-        const id : string | undefined = url.pathname.split("/").pop();
+        const id: string | undefined = url.pathname.split("/").pop();
 
         //setUrlpath(id!);
         fetchProduct(id!);
         setSelectedImage(images[0])
-       
-       
+
+
     }, []);
-     useEffect(() => {
-    if (data) {
-        setSelectedImage(data?.imageUrls[0]);
-        setSelectedColor(data?.color[0])
-    } 
-    
-    
-  }, [data]);
+    useEffect(() => {
+        if (data) {
+            setSelectedImage(data?.imageUrls[0]);
+            setSelectedColor(data?.color[0])
+            const prods : CartItem = {
+            id: data!.id,
+            name: data!.name,
+            price: data!.price,
+            image: data!.imageUrls[0],
+            quantity: 1
+          }
+
+          //setProduct(prods)
+          console.log(prods)
+        }
+
+
+    }, [data]);
 
     return (
         <div className="lg:min-h-screen px-4 py-10 md:px-16 bg-white">
@@ -78,7 +93,7 @@ export default function ProductPage() {
                                 <Image
                                     src={`/uploads/${img}`}
                                     alt="Product"
-                                    width={80}                                    height={80}
+                                    width={80} height={80}
                                     className="object-cover"
                                 />
                             </button>
@@ -99,13 +114,24 @@ export default function ProductPage() {
 
                 {/* RIGHT — DETAILS */}
                 <div className="flex flex-col justify-center">
-                    <div className="text-sm text-gray-500 mb-2">
-                        Home / Collections / For Him
-                    </div>
+
                     <h1 className="text-3xl font-serif mb-4">
                         {data?.name}
                     </h1>
+                    <h1 className="text-2xl font-serif mb-4">
+                        {data?.description}
+                    </h1>
+                    {/* DESCRIPTION */}
 
+                    <div>
+                        {cartItems.map( (item) => <>
+                        <p key={item.id}>{item.id}</p>
+                        </>
+                         )}
+
+                    </div>
+
+                   
                     {/* COLOR SELECTION */}
                     <div className="mb-4">
                         <p className="font-semibold mb-2">Color — {selectedColor}</p>
@@ -115,8 +141,8 @@ export default function ProductPage() {
                                     key={color}
                                     onClick={() => setSelectedColor(color)}
                                     className={`w-8 h-8 rounded-full border-2 ${selectedColor === color
-                                            ? "border-gray-700"
-                                            : "border-gray-300"
+                                        ? "border-gray-700"
+                                        : "border-gray-300"
                                         }`}
                                     style={{
                                         backgroundColor: `${color}`,
@@ -131,25 +157,12 @@ export default function ProductPage() {
                         KSh1,550.00 <span className="block text-sm text-gray-500">Tax included.</span>
                     </div>
 
-                    {/* PERSONALIZE BUTTON */}
-                    <button className="bg-gray-800 text-white px-6 py-3 rounded-md mb-4 hover:bg-gray-700 transition">
-                        Personalize It
-                    </button>
 
-                    {/* GIFT WRAP OPTION */}
-                    <div className="flex items-center mb-4">
-                        <input
-                            type="checkbox"
-                            id="gift"
-                            className="mr-2 w-4 h-4 border-gray-400"
-                        />
-                        <label htmlFor="gift" className="text-sm text-gray-700">
-                            Is this a Gift? Add Gift Wrap & Extras…
-                        </label>
-                    </div>
 
                     {/* ADD TO CART BUTTON */}
-                    <button className="bg-black text-white py-4 rounded-md w-full font-medium hover:opacity-90 transition">
+                    <button className="bg-black text-white cursor-pointer py-4 rounded-md w-full font-medium hover:opacity-90 transition"
+                     onClick={ () => addToCart(product!)}
+                    >
                         Add to my cart
                     </button>
                 </div>
