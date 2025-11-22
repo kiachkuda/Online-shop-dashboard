@@ -28,8 +28,8 @@ export interface Product {
   category: string;         
   name: string;             
   description?: string;     
-  color: string[];          
-  size: string;             
+  colors: string[];          
+  sizes: string[];             
   gender: "Male" | "Female" | "Unisex"; 
   price: number;
   sku : string;            
@@ -49,9 +49,9 @@ export type ProductTable = {
     category: string;
     price:number;
     discount:number;
-    color:string[];
+    colors:string[];
     sizes:string[];
-    imageUrls:string[];
+    images:string[];
     available:boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -95,3 +95,4 @@ export interface CartContextType {
   clearCart: () => void;
   subtotal: number;
 }
+

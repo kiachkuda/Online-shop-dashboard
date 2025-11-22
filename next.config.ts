@@ -6,10 +6,13 @@ const nextConfig: NextConfig = {
    return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:5000/api/v1/:path*", // your Node.js backend
+        destination: "/api/:path*", 
       },
     ];
   },
+  // async redirects() {
+
+  // },
   allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
   
 };

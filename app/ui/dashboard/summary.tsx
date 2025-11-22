@@ -16,10 +16,10 @@ export default function Summary()
     return (
         <>
         {
-            summaryData.map( (data) => {
+            summaryData.map( (data, i) => {
                 const Icon = data.icon.icon;
                 return (
-                    <div className="flex flex-col gap-1" key={data.id}>
+                    <div className="flex flex-col gap-1 p-2" key={i}>
                         {/* Top Content */}
                         <div className="flex flex-cols relative justify-between gap-5 px-8 py-6 shadow-xl bg-white rounded-md items-center ">
                             {/* Icon */}
@@ -41,8 +41,8 @@ export default function Summary()
                             
 
                             <div className={clsx( 
-                                " absolute right-0 top-0  bg-blue-300 border border-black text-white px-4  py-2")} >
-                                <Icon className="w-8 h-8" />
+                                " absolute right-0 top-0 bg-blue-300 border border-black text-white px-2  py-2")} >
+                                <Icon className="md;w-8 md:h-8 w-6 h-6" />
                             </div>
             
                         </div>

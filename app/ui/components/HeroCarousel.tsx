@@ -56,15 +56,15 @@ export default function HeroCarousel() {
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -60 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease:[0.3, -0.2, 0.1,0.4] }}
             className="absolute inset-0 flex flex-col md:flex-row items-center justify-between px-6 md:px-16"
           >
             {/* Left Section */}
-            <div className="text-center md:text-left max-w-md space-y-4 z-10">
-              <p className="text-gray-500 uppercase tracking-wide text-sm">
+            <div className="text-center md:text-left max-w-md lg:w-1/2 space-y-4 z-10">
+              <p className="text-gray-500 uppercase tracking-wide text-sm lg:text-lg">
                 {slides[current].subtitle}
               </p>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 {slides[current].title}
               </h2>
               <h3 className="text-3xl sm:text-5xl font-extrabold text-black">
@@ -76,7 +76,7 @@ export default function HeroCarousel() {
             </div>
 
             {/* Right Section */}
-            <div className="relative p-6 w-full md:w-1/2 h-[250px] md:h-[450px] mt-8 mb-3 md:mt-0">
+            <div className="relative p-6 w-full md:w-1/2  lg:w-1/2 h-[250px] md:h-[450px] mt-8 mb-3 md:mt-0">
               
               {/* On Mobile Screen */}
               <div className="md:hidden block absolute inset-0 items-center justify-center">  

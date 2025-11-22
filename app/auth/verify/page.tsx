@@ -78,12 +78,10 @@ export default function VerifyPage() {
                  setError("");
                     // Redirect to login page after 2 seconds
                     setTimeout(() => {
-                        window.location.href = `/auth/login`
-                    }, 2000);
+                        window.location.href = `/pages/login`
+                    }, 1500);
                     return;
             }
-             
-       
         }catch(err){
             setError("An error occurred during verification.");
             setSuccess(false);

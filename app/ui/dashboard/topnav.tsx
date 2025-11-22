@@ -32,7 +32,9 @@ export default function TopNav() {
                 
             </div>
             {/* UserProfile */}
-                <UserProfile />
+            <div className="flex flex-1">
+                 <UserProfile />
+            </div>   
         </div>
     )
 }

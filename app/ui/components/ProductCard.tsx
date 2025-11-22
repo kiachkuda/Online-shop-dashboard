@@ -1,71 +1,97 @@
-"use client";
 
+
+
+"use client";
 import { Product } from "@/app/lib/definitions";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-
-import { useCart } from "@/context/CartProvider";
+import { useState } from 'react'
+import { useCart } from "@/contexts/CartProvider";
+import { useViewedItems } from "@/contexts/ViewedItemsProvider";
+import {useRouter} from "next/navigation";
 
 
 
 export default function ProductCard({
   imageUrls,
+  sizes,
   name,
   price,
   description,
   sku,
 }: Product) {
 
+  const route = useRouter();
 
 
   const images: string[] = Array.isArray(imageUrls)
     ? imageUrls
     : (JSON.parse(imageUrls || "[]") as string[]);
 
-   
+  const sizeArray: string[] = Array.isArray(sizes)
+    ? sizes
+    : (JSON.parse(sizes || "[]") as string[]);
+
+    const {addItem, viewedItems} = useViewedItems();
+
+    const fetchProduct = async (id: string) => {
+            try {
+              const res = await fetch("/api/products/" + id);
+                
+              if(!res) return;
+
+              const product : Product = await res.json();
+              addItem(product)
+
+              route.push(`shop/collections/${id}`);
+    
+            } catch (err) {
+                console.error("Error fetching products:", err);
+            }
+        }
+
+
   return (
-    <div className="w-60 xl:w-72 md:w-56 m-auto sm:m-auto bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
-      {/* Image */}
-      <Link href={`collections/${sku}`}>
+
+    <div className="bg-gray-200 relative hover:cursor-pointer hover">
+      <span onClick={() => fetchProduct(sku)}>
+      <div className="img-container relative aspect-[5/6]" style={{}}>
         <Image
-          src={images[0] ? `/uploads/${images[0]}` : "/uploads/placeholder.png"}
+          src={images[0] ? `${images[0]}` : "/uploads/placeholder.png"}
           alt={name}
-          width={250}
-          height={256}
+          fill
           priority
-          className="object-contain"
+          className="object-cover object-center w-[100%] h-[100%]"
         />
-      </Link>
 
-
-      {/* Details */}
-      <div className="p-3">
-        Price
-        <div className="flex items-center gap-2">
-          <span className="text-2xl font-semibold">${price.toFixed(2)}</span>
-          {/* {oldPrice && (
-            <span className="text-gray-400 line-through text-sm">${oldPrice.toFixed(2)}</span>
-          )} */}
+        <div className="w-full absolute hidden bottom-0 gap-2 justify-center items-center bg-gray-300 py-2">
+          {
+            sizeArray.map((size, i) => {
+              return (
+                <div className="flex-1 text-xl text-center " key={i}>
+                  {size}
+                </div>
+              )
+            })}
         </div>
 
+      </div>
+      </span>
+
+      <div className="md:my-2 my-5 px-3 py-2 md:text-lg lg:text-sm text-xl tracking-wide md:py-4 md:h-[100px] h-[120px]">
         {/* Title */}
-        <p className="text-gray-700 text-sm mt-1 line-clamp-2 leading-tight">
+        <p className="my-2">
           {name}
         </p>
-
-        {/* Rating */}
-        {/* <div className="flex items-center gap-1 mt-1 text-sm">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              size={14}
-              className={i < Math.round(rating) ? "text-orange-400 fill-orange-400" : "text-gray-300"}
-            />
-          ))}
-          <span className="text-gray-600 ml-1">{reviews.toLocaleString()}</span>
-        </div> */}
+        <p>KES {price}</p>
       </div>
+      <div className='w-full p-2 mt-4'>
+        <button onClick={() => fetchProduct(sku)} className="bg-yellow-600 md:p-2 p-2 rounded-lg md:text-lg text-xl w-full">Add to cart</button>
+      </div>
+
+
     </div>
+
   );
 }

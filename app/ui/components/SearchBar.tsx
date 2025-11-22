@@ -10,7 +10,7 @@ export default function SearchBar () {
                   focused ? "md:w-80 sm:w-64" : "md:w-48 sm:w-24"
                 }`}
               >
-                <MagnifyingGlassIcon className="text-gray-500 h-5 w-5" />
+                <MagnifyingGlassIcon className="text-gray-500 h-5 w-10" />
                 <input
                   type="text"
                   placeholder="Search..."
@@ -18,7 +18,7 @@ export default function SearchBar () {
                   onFocus={() => setFocused(true)}
                   onBlur={() => setFocused(false)}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="bg-transparent  ml-2 w-full text-sm  md:block"
+                  className="bg-transparent min-w-12  ml-2 w-full text-sm  md:block"
                 />
               </div>
     )

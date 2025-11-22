@@ -23,16 +23,16 @@ export default function UserProfile() {
     };
 
     return (
-        <div className="flex gap-2 relative items-center">
+        <div className="flex gap-2 relative items-center p-2 w-full h-full">
             <Image
                 src={user.avatar}
                 alt="User Avatar"
-                width={48}
-                height= {48}
-                className="rounded-full"             
+                fill
+                priority
+                className="w-16 h-16"        
                 onClick={handleImageClick}
             />
-            <p>Samuel Kiarie</p>
+           
             {showDetails && (
                 <div
                     style={{

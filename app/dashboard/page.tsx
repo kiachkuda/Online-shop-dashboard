@@ -7,7 +7,7 @@ export default function Page() {
     return <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
         {/* Main Page  */}
        <Summary />
-       <div className="w-full  col-span-2  flex flex-row gap-2">
+       <div className="w-full  col-span-2  flex md:flex-row flex-col  gap-2">
        <LineChart />
        <BarChart />
        </div>
