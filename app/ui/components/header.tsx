@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { UserIcon,  ShoppingCartIcon, MagnifyingGlassIcon} from '@heroicons/react/24/outline';
+import {
+  UserIcon,
+  ShoppingCartIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import SearchBar from "./SearchBar";
 import Logo from "./Logo";
 import { useCart } from "@/contexts/CartProvider";
@@ -9,52 +14,108 @@ import Link from "next/link";
 import { useAuthState } from "@/app/Hooks/AuthHook";
 
 export default function Header() {
-
-  const [items, setItems] = useState(0);
-  const {cartItems} = useCart();
-  const {isAuthenticated, logout} = useAuthState();
-
-
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { cartItems } = useCart();
+  const { isAuthenticated, logout } = useAuthState();
 
   return (
-    <header className="w-full bg-white shadow-md lg:pr-12 px-2 md:px-6 py-3 flex gap-3 items-center justify-between sticky top-0 z-50">
-      {/* Logo */}
-      <Logo />
-    
-      <SearchBar />
+    <header className="w-full bg-white shadow-md px-3 md:px-6 py-3 sticky top-0 z-50">
+      <div className="flex items-center justify-between">
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          {mobileOpen ? (
+            <XMarkIcon className="h-7 w-7 text-gray-700" />
+          ) : (
+            <Bars3Icon className="h-7 w-7 text-gray-700" />
+          )}
+        </button>
 
-      {/* Icons */}
-      <div className="flex items-center space-x-5 ">
-        <div className=" flex gap-3">
-          <UserIcon className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition" />
-          <span className="text-md text-black group-hover:opacity-100 transition sm:hidden md:block hidden">
-            Account
-          </span>
+        {/* Logo */}
+        <div className="flex-1 md:flex-none flex justify-center md:justify-start">
+          <Logo />
         </div>
 
-        <div className="flex gap-5 relative cursor-pointer">
-          <Link href="/shop/cart">
-            <ShoppingCartIcon className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition" />
+        {/* Desktop Search */}
+        <div className="hidden md:flex w-1/2">
+          <SearchBar />
+        </div>
+
+        {/* Icons */}
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center gap-2 cursor-pointer">
+            <UserIcon className="h-6 w-6 text-gray-700" />
+            <span className="hidden md:block text-sm">Account</span>
+          </div>
+
+          <Link href="/cart" className="relative flex items-center gap-2">
+            <ShoppingCartIcon className="h-6 w-6 text-gray-700" />
+            <span className="absolute -top-2 left-2 bg-red-500 text-white text-xs font-semibold rounded-full h-4 w-4 flex items-center justify-center">
+              {cartItems.length}
+            </span>
+            <span className="hidden md:block text-sm">Cart</span>
           </Link>
-          <span className="absolute -top-2 -left-1 bg-red-500 text-white text-xs font-semibold rounded-full h-4 w-4 flex items-center justify-center">
-            {cartItems.length}
-          </span>
-          <span className="text-md text-black transition hidden sm:hidden md:block">
-            Cart
-          </span>
-          
+        </div>
+
+        {/* Auth Buttons */}
+        <div className="hidden md:flex ml-6">
+          {!isAuthenticated ? (
+            <Link
+              className="px-6 py-2 rounded-lg bg-gray-200 font-semibold"
+              href="/login"
+            >
+              Login
+            </Link>
+          ) : (
+            <button
+              className="px-6 py-2 bg-cyan-500 text-white rounded-lg"
+              onClick={logout}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
-      <div className="flex gap-5">
-        {!isAuthenticated ? <>
-        <Link className="text-2lg tracking-wider font-bold px-6 py-2 rounded-lg bg-gray-200" href="shop/login">Login</Link>
-       
-        </> : <>
-        <button className="btn border-t-cyan-500 rounded-lg text-5lg cursor-pointer bg-cyan-500 p-2" onClick={logout}>Logout</button>
-        </>}
-       
-      </div>
-     
+
+      {/* Mobile Dropdown Menu */}
+      {mobileOpen && (
+        <div className="md:hidden mt-4 bg-white p-4 shadow-lg rounded-lg space-y-4 animate-fadeIn">
+          {/* Mobile Search */}
+          <SearchBar />
+
+          {/* Navigation Links */}
+          <div className="flex flex-col gap-4 text-lg font-medium">
+            <Link href="/" onClick={() => setMobileOpen(false)}>Home</Link>
+            <Link href="/shop" onClick={() => setMobileOpen(false)}>Shop</Link>
+            <Link href="/categories" onClick={() => setMobileOpen(false)}>Categories</Link>
+            <Link href="/contact" onClick={() => setMobileOpen(false)}>Contact</Link>
+          </div>
+
+          {/* Auth Actions Mobile */}
+          <div className="pt-4">
+            {!isAuthenticated ? (
+              <Link
+                className="block w-full text-center py-2 bg-gray-200 rounded-lg font-semibold"
+                href="/login"
+              >
+                Login
+              </Link>
+            ) : (
+              <button
+                className="block w-full py-2 bg-cyan-500 text-white rounded-lg font-semibold"
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+              >
+                Logout
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

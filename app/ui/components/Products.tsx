@@ -36,8 +36,6 @@ export default function ProductGrid() {
         category
       });
 
-     
-
       const res = await fetch(
         `api/products?${query.toString()}`
       );

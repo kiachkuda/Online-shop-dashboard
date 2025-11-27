@@ -39,7 +39,7 @@ export function proxy(req: NextRequest) {
 
     if(!decodedFunc) {
       req.cookies.delete('token');
-      return NextResponse.redirect(new URL('/shop/login', req.url));
+      return NextResponse.redirect(new URL('/login', req.url));
     }
 
     return NextResponse.next(); 
@@ -48,5 +48,5 @@ export function proxy(req: NextRequest) {
 
 // Apply Proxy only on dashboard routes
 export const config = {
-  matcher: ['/dashboard/:path*', '/shop/checkout'],
+  matcher: ['/dashboard/:path*', '/checkout'],
 };

@@ -61,7 +61,8 @@ export default function ProductCard({
           src={images[0] ? `${images[0]}` : "/uploads/placeholder.png"}
           alt={name}
           fill
-          priority
+          loading="lazy"
+          placeholder="empty"
           className="object-cover object-center w-[100%] h-[100%]"
         />
 
