@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
 
         const form = e.currentTarget;
-        const formData = new FormData();
+        
         const email = (form.elements.namedItem("email") as HTMLInputElement).value;
 
         setLoading(true);

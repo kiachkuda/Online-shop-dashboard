@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import postgres from 'postgres';
 import { NextRequest, NextResponse } from 'next/server';
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
@@ -9,6 +10,8 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
+
+const sql = postgres(process.env.POSTGRESS_URL!, {ssl: 'require'});
 
 export default async function executeQuery({
   query,

@@ -41,7 +41,7 @@ export interface Product {
 
 
 export type ProductTable = {
-   _id:ObjectId;
+    id:number;
     name:string;
     description:string;
     brand:string;

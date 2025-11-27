@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { NextRequest } from "next/server";
-import { ProductTable } from "@/app/lib/definitions";
+import { Product } from "@/app/lib/definitions";
 // import ProductsTable from "@/app/ui/products/table";
 // import clsx from "clsx";
 export default function Page(req: NextRequest ){
 
-    const [data, setData] = useState<ProductTable>();
+    const [data, setData] = useState<Product>();
     // const [isEditing, setIsEditing] = useState(false);
     const [urlpath, setUrlpath] = useState("");
 
@@ -73,22 +73,22 @@ export default function Page(req: NextRequest ){
                         <label className="block text-sm font-medium text-gray-700">Description</label>
                         <textarea  name="description"  defaultValue={data?.description} className="mt-1 block w-full border bg-grey-300 border-gray-300 rounded-md shadow-sm p-2 "></textarea>
                     </div>
-                    <div className="p-1">
+                    {/* <div className="p-1">
                         <label className="block text-sm font-medium text-gray-700">Buying Price</label>
                         <input type="number" name="buyingPrice" defaultValue={data?.buyingPrice} className="mt-1 block w-full border bg-gray-300 border-gray-300 rounded-md shadow-sm p-2 cursor-not-allowed" disabled={true} />
-                    </div>
+                    </div> */}
                     <div className="p-1">
                         <label className="block text-sm font-medium text-gray-700">Selling Price</label>
                         <input type="number" name="price" defaultValue={data?.price} className="mt-1 block w-full border border-gray-300 bg-grey-100 rounded-md shadow-sm p-2" />
                     </div>
                     <div className="p-1">
                         <label className="block text-sm font-medium text-gray-700">Discount (%)</label>
-                        <input type="number" name="discount" defaultValue={data?.discount} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+                        <input type="number" name="discount" defaultValue={data?.discount_price} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
                     </div>
                 
                     <div className="p-1">
                         <label className="block text-sm font-medium text-gray-700">Available</label>
-                        <select name="available" defaultValue={data?.available ? "true" : "false"} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                        <select name="available" defaultValue={data?.stock_quantity! > 0 ? "true" : "false"} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
                             <option value="true">In Stock</option>
                             <option value="false">Out of Stock</option>
                         </select>

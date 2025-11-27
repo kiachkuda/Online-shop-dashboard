@@ -83,7 +83,7 @@ export default function VerifyPage() {
                     return;
             }
         }catch(err){
-            setError("An error occurred during verification.");
+            setError("An error occurred during verification." + err);
             setSuccess(false);
             return;
         }

@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
     
     setError("");
         const form = e.currentTarget;
-        const formData = new FormData();
+       
         const newPassword = (form.elements.namedItem("newPassword") as HTMLInputElement).value;
         const code = (form.elements.namedItem("code") as HTMLInputElement).value;
     try {
