@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/lib/definitions";
 import Categories, { CategoryType } from "./Categories";
@@ -80,13 +80,14 @@ export default function ProductGrid() {
 
   return (
     <div className="w-full bg-gray-500 p-6 mt-2" id="products">
-
+     
       <Categories handleChange={handleChange} categories={categories} />
       {loading ? (
         <p className="text-center text-gray-500" >Loading products...</p>
       ) : (
         <>
           {/* Product Grid */}
+           <Suspense>
           <div
             className="
               grid 
@@ -103,7 +104,7 @@ export default function ProductGrid() {
               products.map((p, i) => <ProductCard key={i} {...p} />)
             }
           </div>
-
+          </Suspense>
           {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="flex justify-center mt-8 space-x-2">
@@ -139,6 +140,7 @@ export default function ProductGrid() {
           )}
         </>
       )}
+   
     </div>
   );
 }
