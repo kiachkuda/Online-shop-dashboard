@@ -1,3 +1,4 @@
+"use client"
 import Products from '@/app/ui/components/Products';
 import HeroCarousel from '@/app/ui/components/HeroCarousel';
 

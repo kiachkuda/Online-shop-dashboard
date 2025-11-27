@@ -1,4 +1,4 @@
-import { ShoppingBagIcon, DocumentDuplicateIcon, CurrencyEuroIcon, ArrowsUpDownIcon, ArrowDownRightIcon } from "@heroicons/react/24/outline"
+"use client"
 import Summary from "../ui/dashboard/summary"
 import LineChart from "../ui/dashboard/charts/Linechart"
 import BarChart from "../ui/dashboard/charts/BarChart"
