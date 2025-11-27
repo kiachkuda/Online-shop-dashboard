@@ -6,43 +6,31 @@ import type { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 
 
-const roleAccess: Record<string, string[]> = {
-  admin: ['/dashboard'],
-  user: ['/shop'],
-};
+// const roleAccess: Record<string, string[]> = {
+//   admin: ['/dashboard'],
+//   user: ['/shop'],
+// };
 
-const user_details = (token : string, req:NextRequest) => {
 
-  if(!token) return;
+
+export function proxy(req: NextRequest) {
+    const token = req.cookies.get('token')!.value;
+
+   if(!token) return NextResponse.redirect(new URL('/login', req.url));
 
   try{
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
     if(typeof decoded === 'object' && decoded.exp && Date.now() >= decoded.exp * 1000){
         req.cookies.delete('token');
-        return;
+        return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    return decoded;
+    return NextResponse.next(); 
 
   }catch(error){
     console.error(error);
   }
-
-}
-
-
-export function proxy(req: NextRequest) {
-    const token = req.cookies.get('token')!.value;
-
-    const decodedFunc = user_details(token, req);
-
-    if(!decodedFunc) {
-      req.cookies.delete('token');
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-
-    return NextResponse.next(); 
 
 }
 
