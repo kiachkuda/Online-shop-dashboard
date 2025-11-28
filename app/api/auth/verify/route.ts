@@ -1,6 +1,6 @@
 import {cookies} from "next/headers";
 import { NextResponse, NextRequest } from "next/server";
-import executeQuery from '@/app/lib/data';
+import {sql} from '@/app/lib/data';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,10 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No email in cookie" }, { status: 400 });
     }
 
-    const result = await executeQuery({
-      query: "SELECT * FROM users WHERE email = ?",
-      values: [email]
-    });
+    const result = await sql`SELECT * FROM users WHERE email = ${email}`
     const user = result[0];
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -36,12 +33,9 @@ export async function POST(req: NextRequest) {
     if (user.otp_Expires_at && new Date() > new Date(user.otp_Expires_at)) {
       return NextResponse.json({ error: "OTP has expired" }, { status: 400 });
     }
-    const res = await executeQuery({
-      query : "UPDATE users SET is_verified = ?, otp_code = ?, otp_expires_at = ? WHERE email = ?",
-      values: [true, null, null, email]
-    })
-
-    if (res.modifiedCount === 0) {
+    const res = await sql`UPDATE users SET is_verified = ${true}, otp_code = ${null}, otp_expires_at = ${null} WHERE email = ${email}`
+  
+    if (res.count === 0) {
       return NextResponse.json({ error: "Failed to verify user" }, { status: 500 });
     }else{
         (await cookies()).delete("email");

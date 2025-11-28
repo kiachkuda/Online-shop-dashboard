@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 
-import executeQuery from "@/app/lib/data";
+import {sql} from "@/app/lib/data";
 
 
 export async function POST(req: NextRequest) {
@@ -19,10 +19,8 @@ export async function POST(req: NextRequest) {
 
     // const user = await db.collection('users').findOne({ email });
 
-    const result = await executeQuery({
-      query : "SELECT * FROM users WHERE email = ?",
-      values : [email]
-    });
+    const result = await sql`SELECT * FROM users WHERE email = ${email}`;
+     
 
     const user = result[0];
     
@@ -36,21 +34,15 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 4 * 60 * 1000);; // expires in 15 min
     
 
-    const res = await executeQuery({
-      query : "SELECT * FROM password_resets WHERE user_id = ?",
-      values: [user.id]
-    })
+    const res = await sql`SELECT * FROM password_resets WHERE user_id = ${user.id}`;
+    
 
     if(res) {
-        await executeQuery({
-          query : "UPDATE password_resets SET reset_code = ?, expires_at = ? WHERE user_id = ?",
-          values : [verificationCode, expiresAt, user.id ]
-        })
+        await sql`UPDATE password_resets SET reset_code = ${verificationCode}, expires_at =${expiresAt} WHERE user_id = ${user.id }`;
+         
     }else{
-       await executeQuery({
-        query : "INSERT into password_resets(user_id, reset_code, expires_at) values(?, ?, ?)",
-        values : [user.id, verificationCode, expiresAt]
-      })
+       await sql`INSERT into password_resets(user_id, reset_code, expires_at) values(${user.id}, ${verificationCode}, ${expiresAt}) `
+      
     }
 
    

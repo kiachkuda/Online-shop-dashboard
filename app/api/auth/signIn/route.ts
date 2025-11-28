@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import executeQuery from '@/app/lib/data'
+import {sql} from '@/app/lib/data'
 import cookie  from 'cookie';
 
 
@@ -16,11 +16,8 @@ export async function POST(req: NextRequest) {
         }
 
         // Find user by email
-       const result = await executeQuery({
-                query: 'SELECT * FROM users WHERE email = ?',
-                values: [email],
-              });
-
+       const result = await sql`SELECT * FROM users WHERE email = ${email}`;
+               
         const user = result[0];
 
         if (!user) {
