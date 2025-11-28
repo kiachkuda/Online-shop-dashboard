@@ -1,4 +1,4 @@
-import executeQuery from '@/app/lib/data';
+import {sql} from '@/app/lib/data';
 
 import {NextResponse, NextRequest} from 'next/server';
 
@@ -11,11 +11,7 @@ import cookie from "cookie";
 export  async function GET() {
   
     try {
-      const users = await executeQuery({
-        query: 'SELECT * FROM users LIMIT 10',
-        values: [],
-      });
-      
+      const users = await sql `SELECT * FROM users LIMIT 10`
       return NextResponse.json( {users} );
     } catch (error) {
 
@@ -30,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json(); 
 
-    const { firstname, lastname, email, phone, password } = body;
+    const { firstname, lastname, email, phone, password }: { firstname: string; lastname: string; email: string; phone: string; password: string } = body;
 
     if (!firstname || !lastname) {
       return NextResponse.json(
@@ -55,18 +51,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email field required", errorType: "email" }, { status: 400 });
     }
     // Check if user with the same email already exists
-    const existingUser = await executeQuery({
-      query : "SELECT * FROM users where email = ?",
-      values: [email]
-    });
-
+    const existingUser = await sql `SELECT * FROM users where email = ${email}`;
    
+   if(existingUser) {
+     return NextResponse.json({ error: "Email field required", errorType: "email" }, { status: 400 });
+   }
 
     const otpExpiry = new Date(Date.now() + 4 * 60 * 60 * 1000); // 4 hours from now
-    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
+    const otp : string = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
 
     // Hash the password before storing it
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword : string = await bcrypt.hash(password, 10);
     
 
     /* Send registration email to user */
@@ -86,11 +81,15 @@ export async function POST(req: NextRequest) {
     };   
 
     //await db.collection("users").insertOne(user);
-    let name = firstname + " " + lastname;
-    await executeQuery({
-      query : "INSERT users(email, phone, password_hash, name, otp_code, otp_expires_at) values(?, ?, ?, ?, ?, ?)",
-      values : [email, phone, hashedPassword, name, otp, otpExpiry]
-    })
+    let name: string = firstname + " " + lastname;
+    const query = await sql `INSERT users(email, phone, password_hash, name, otp_code, otp_expires_at) 
+    values(${email}, ${phone}, ${hashedPassword}, ${name}, ${otp}, ${otpExpiry})`;
+    if(!query){
+      return NextResponse.json(
+      { error: "Failed to create user "},
+      { status: 500 }
+    );
+    }
     const res = NextResponse.json(
       { message: "User registered successfully" },
       { status: 201 }

@@ -3,99 +3,15 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { put } from '@vercel/blob'
 
-import { ObjectId } from "mongodb";
 import  path  from "path";
 import { writeFile } from "fs/promises";
-import { ProductTable } from "@/app/lib/definitions";
-import executeQuery, { getProductsByPage } from "@/app/lib/data";
 
-
+import  { sql, getProductsByPage } from "@/app/lib/data";
 
 
 // GET /api/products
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-      const page = parseInt(url.searchParams.get('page') || '1', 10) || 1;
-      const limit = parseInt(url.searchParams.get('limit') || '10', 10) || 10;
-      const offset = (page - 1) * limit;
-      const [totalResults] = await executeQuery({query: 'SELECT COUNT(*) as count FROM products'});
-  
-      // Filters
-      const brand = url.searchParams.get('brand');
-      const category = url.searchParams.get('category');
-      const gender = url.searchParams.get('gender');
-      const min_price = url.searchParams.get('min_price');
-      const max_price = url.searchParams.get('max_price');
-      const sort = url.searchParams.get('sort');
-  
-      // Base query + joins for readability
-      let baseQuery = `
-        FROM products p
-        JOIN brands b ON p.brand_id = b.id
-        JOIN categories c ON p.category_id = c.id
-        WHERE 1 = 1
-      `;
-  
-      const params: any[] = [];
-  
-      // Add filters dynamically
-      if (brand) {
-        baseQuery += " AND b.name = ?";
-        params.push(brand);
-      }
-  
-      if (category) {
-        baseQuery += " AND c.name = ?";
-        params.push(category);
-      }
-  
-      if (gender) {
-        baseQuery += " AND p.gender = ?";
-        params.push(gender);
-      }
-  
-      if (min_price) {
-        baseQuery += " AND p.price >= ?";
-        params.push(parseFloat(min_price));
-      }
-  
-      if (max_price) {
-        baseQuery += " AND p.price <= ?";
-        params.push(parseFloat(max_price));
-      }
-  
-      // Sorting
-      let orderBy = "p.created_at DESC"; // default sort: newest first
-      if (sort) {
-        if (sort === "price_asc") orderBy = "p.price ASC";
-        else if (sort === "price_desc") orderBy = "p.price DESC";
-        else if (sort === "latest") orderBy = "p.created_at DESC";
-        else if (sort === "oldest") orderBy = "p.created_at ASC";
-      }
-  
-      try {
-          const results = await executeQuery({
-              query :  `
-              SELECT 
-              p.id, p.name, p.price, p.description, p.feature, p.sku, p.discount_price, p.colors, p.sizes,
-              p.gender, p.stock_quantity,  p.imageUrls,
-              b.name AS brand, c.name AS category
-              ${baseQuery} ORDER BY ${orderBy} LIMIT ? OFFSET ?
-              `,
-              values :  [...params, limit, offset]
-          });
-  
-          const totalCount = totalResults && (totalResults.count ?? (totalResults['COUNT(*)'] ?? 0));
-          return NextResponse.json({
-              current_page: page,
-              total_pages: Math.ceil(Number(totalCount) / limit),
-              total_results: Number(totalCount),
-              filters: { brand, category, gender, min_price, max_price, sort },
-              results
-          });
-      } catch (error) {
-          return NextResponse.json({ error: String(error) }, { status: 500 });
-      }
+  getProductsByPage(req);
 }
 
 // Generate a sku from name
@@ -160,28 +76,38 @@ export async function POST(req: Request) {
 
    
     let sku = generateSku(name);
-    const result = executeQuery({
-           query: `INSERT INTO products (name, brand_id, category_id, sku, description, material, colors,
+
+    // Normalize form values to primitive types before passing to the sql tagged template
+    const brand_id_str = brand_id ? String(brand_id) : null;
+    const category_id_str = category_id ? String(category_id) : null;
+    const gender_str = gender ? String(gender) : null;
+    const buyingPriceNum = Number(buyingPrice);
+    const priceNum = Number(price);
+    const discountNum = discount ? Number(discount) : null;
+    const stock_quantity_num = stock_quantity ? Number(stock_quantity) : null;
+    const colorsJson = JSON.stringify(colors);
+    const sizesJson = JSON.stringify(sizes);
+    const imageUrlsJson = JSON.stringify(imageUrls);
+
+    const result = await sql`INSERT INTO products (name, brand_id, category_id, sku, description, material, colors,
             gender, sizes, price, feature, discount_price, stock_quantity, imageUrls 
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            values : [
-                name, 
-                brand_id, 
-                category_id, 
-                sku, 
-                description, 
-                material || null, 
-                colors, 
-                gender, 
-                sizes, 
-                price,
-                feature || null, 
-                discount, 
-                stock_quantity,
-                JSON.stringify(imageUrls) 
-            ]
-          }
-        );
+        ) VALUES  (
+                ${name}, 
+                ${brand_id_str}, 
+                ${category_id_str}, 
+                ${sku}, 
+                ${description}, 
+                ${material || null}, 
+                ${colorsJson}, 
+                ${gender_str}, 
+                ${sizesJson}, 
+                ${priceNum},
+                ${feature || null}, 
+                ${discountNum}, 
+                ${stock_quantity_num},
+                ${imageUrlsJson} 
+            )`;
+        
    
    
 
