@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 
-import executeQuery from "@/app/lib/data";
+import {sql} from "@/app/lib/data";
 
 export async function GET(req: NextRequest) {
     try {
-        const results = await executeQuery({ query: "SELECT * FROM categories", values: [] });
+        const results = await sql`SELECT * FROM categories`;
         return NextResponse.json({
             results
         })
