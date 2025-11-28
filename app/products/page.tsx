@@ -1,9 +1,12 @@
 import Products from '@/app/ui/components/Products'
-import React from 'react'
+import { Suspense }from 'react'
 
 function page() {
   return (
-    <Products />
+    <Suspense>
+      <Products />
+    </Suspense>
+    
   )
 }
 
