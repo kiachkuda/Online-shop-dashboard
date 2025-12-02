@@ -52,8 +52,8 @@ export async function POST(req: NextRequest) {
     }
     // Check if user with the same email already exists
     const existingUser = await sql `SELECT * FROM users where email = ${email}`;
-   
-   if(existingUser) {
+   console.log(existingUser)
+   if(existingUser[0]) {
      return NextResponse.json({ error: "Email field required", errorType: "email" }, { status: 400 });
    }
 
@@ -63,6 +63,21 @@ export async function POST(req: NextRequest) {
     // Hash the password before storing it
     const hashedPassword : string = await bcrypt.hash(password, 10);
     
+    
+    
+    let name: string = firstname + " " + lastname;
+    const query = await sql `INSERT users(email, phone, password_hash, name, otp_code, otp_expires_at) 
+    values(${email}, ${phone}, ${hashedPassword}, ${name}, ${otp}, ${otpExpiry})`;
+    if(!query){
+      return NextResponse.json(
+      { error: "Failed to create user "},
+      { status: 500 }
+    );
+    }
+    const res = NextResponse.json(
+      { message: "User registered successfully" },
+      { status: 201 }
+    );
 
     /* Send registration email to user */
     const transporter = nodemailer.createTransport({
@@ -80,23 +95,10 @@ export async function POST(req: NextRequest) {
       text: `Hello ${firstname},\n\nThank you for registering. Your OTP is: ${otp}\n\nBest regards,\nMtushadmin Team`,
     };   
 
-    //await db.collection("users").insertOne(user);
-    let name: string = firstname + " " + lastname;
-    const query = await sql `INSERT users(email, phone, password_hash, name, otp_code, otp_expires_at) 
-    values(${email}, ${phone}, ${hashedPassword}, ${name}, ${otp}, ${otpExpiry})`;
-    if(!query){
-      return NextResponse.json(
-      { error: "Failed to create user "},
-      { status: 500 }
-    );
-    }
-    const res = NextResponse.json(
-      { message: "User registered successfully" },
-      { status: 201 }
-    );
 
     await transporter.sendMail(mailOptions);
 
+    // Send cookie as response, for email confirmation
     res.headers.set("set-cookie", cookie.serialize("email", email, 
       { 
         path: '/', 

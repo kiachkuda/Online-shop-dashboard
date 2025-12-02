@@ -3,7 +3,7 @@ import Image from "next/image"
 export default function Logo() {
     return (
     <div className="flex items-center space-x-2 cursor-pointer">
-           <Link href="/shop" className="flex gap-2">
+           <Link href="/" className="flex gap-2">
            <div className="relative">
             <Image
               src="/logo.png"

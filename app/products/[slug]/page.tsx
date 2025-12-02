@@ -39,8 +39,10 @@ export default function ProductPage() {
                 ? product.colors
                 : (JSON.parse(product.colors || "[]") as string[]);
            
+            
+             setImages(images);
             setSelectedImage(images[0] || null)
-            setImages(images);
+           
 
             setSelectedColor(colors[0] || null);
             setColors(colorArray);

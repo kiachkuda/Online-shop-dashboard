@@ -44,7 +44,7 @@ export default function ProductCard({
               const product : Product = await res.json();
               addItem(product)
 
-              route.push(`shop/collections/${id}`);
+              route.push(`products/${id}`);
     
             } catch (err) {
                 console.error("Error fetching products:", err);
@@ -58,7 +58,7 @@ export default function ProductCard({
       <span onClick={() => fetchProduct(sku)}>
       <div className="img-container relative aspect-[5/6]" style={{}}>
         <Image
-          src={images[0] ? `${images[0]}` : "/uploads/placeholder.png"}
+          src={images[0] ? `${images[0]}` : "/uploads/2.jpg"}
           alt={name}
           fill
           loading="lazy"

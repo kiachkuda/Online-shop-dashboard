@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/lib/definitions";
-import Categories, { CategoryType } from "./Categories";
+import { Categories,  CategoryType } from "./Categories";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function ProductGrid() {
@@ -12,7 +12,7 @@ export default function ProductGrid() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(6); // number of products per page
-  const [sort, setSort] = useState('DESC');
+  const [sort, setSort] = useState('price_desc');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState<CategoryType[]>([])
 
@@ -53,28 +53,44 @@ export default function ProductGrid() {
   };
 
   const fetchCategories = async () => {
-     const res = await fetch(
-        `api/categories`
-      );
-      const cats = await res.json();
+    try{
+        const res = await fetch(
+          `api/categories`
+        );
+        const cats = await res.json();
 
-      setCategories(cats.results)
+        setCategories(cats.results)
+    }catch(error){
+      console.log("error fetching categories")
+    }
+     
     
   }
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
-        params.set("page", page.toString());
+    params.set("page", page.toString());
+    
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
+   
     //window.scrollTo({ top: 0, behavior: "smooth" });
      router.push(`${pathname}/?${params}/#products`)
   };
 
   const handleChange = (value:string) => {
         const params = new URLSearchParams(searchParams);
+
+        
+
         params.set("category", value || '');
         setCategory(value)
+        if(params.get('category') == "")
+        {
+          params.delete('category');
+          if(params.get('page')) params.set("page", "1")
+        }  
+          
         router.push(`${pathname}/?${params}/#products`)
     }
 

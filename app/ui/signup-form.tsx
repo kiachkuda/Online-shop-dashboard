@@ -125,10 +125,10 @@ export default function SignUpForm() {
                 </div>
 
                 <div className="w-full">
-                    <div className='flex flex-row md:flex-col gap-5'>
-                        <div className="flex gap-5">
+                    <div className='w-full flex flex-row md:flex-col gap-5'>
+                        <div className="w-full flex flex-col md:flex-row gap-2">
 
-                            <div className='w-full'>
+                            <div className=' flex flex-col'>
                                 <label
                                     className="mb-3 mt-5 block text-xs font-medium text-gray-900"
                                     htmlFor="firstname"
@@ -147,7 +147,7 @@ export default function SignUpForm() {
                                     <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                                 </div>
                             </div>
-                            <div className='w-full'>
+                            <div className='flex flex-col'>
                                 <label
                                     className="mb-3 mt-5 block text-xs font-medium text-gray-900"
                                     htmlFor="lastname"

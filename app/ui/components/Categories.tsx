@@ -20,7 +20,7 @@ export type CategoryType = {
 }
 
 
-function Categories(props  : {categories : CategoryType[], handleChange  : (id : string) => void }) {
+export function Categories(props  : {categories : CategoryType[], handleChange  : (id : string) => void }) {
 
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -47,4 +47,3 @@ function Categories(props  : {categories : CategoryType[], handleChange  : (id :
   )
 }
 
-export default Categories

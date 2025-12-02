@@ -13,7 +13,7 @@ import { useCart } from "@/contexts/CartProvider";
 import Link from "next/link";
 import { useAuthState } from "@/app/Hooks/AuthHook";
 
-export default function Header() {
+export  function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cartItems } = useCart();
   const { isAuthenticated, logout } = useAuthState();
@@ -22,21 +22,9 @@ export default function Header() {
     <header className="w-full bg-white shadow-md px-3 md:px-6 py-3 sticky top-0 z-50">
       <div className="flex items-center justify-between">
         {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? (
-            <XMarkIcon className="h-7 w-7 text-gray-700" />
-          ) : (
-            <Bars3Icon className="h-7 w-7 text-gray-700" />
-          )}
-        </button>
+         <Logo />
 
-        {/* Logo */}
-        <div className="flex-1 md:flex-none flex justify-center md:justify-start">
-          <Logo />
-        </div>
+     
 
         {/* Desktop Search */}
         <div className="hidden md:flex w-1/2">
@@ -77,6 +65,17 @@ export default function Header() {
             </button>
           )}
         </div>
+
+        <button
+          className="md:hidden p-2"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          {mobileOpen ? (
+            <XMarkIcon className="h-7 w-7 text-gray-700" />
+          ) : (
+            <Bars3Icon className="h-7 w-7 text-gray-700" />
+          )}
+        </button>
       </div>
 
       {/* Mobile Dropdown Menu */}
@@ -88,7 +87,7 @@ export default function Header() {
           {/* Navigation Links */}
           <div className="flex flex-col gap-4 text-lg font-medium">
             <Link href="/" onClick={() => setMobileOpen(false)}>Home</Link>
-            <Link href="/shop" onClick={() => setMobileOpen(false)}>Shop</Link>
+            <Link href="/products" onClick={() => setMobileOpen(false)}>Shop</Link>
             <Link href="/categories" onClick={() => setMobileOpen(false)}>Categories</Link>
             <Link href="/contact" onClick={() => setMobileOpen(false)}>Contact</Link>
           </div>
@@ -116,6 +115,8 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      
     </header>
   );
 }

@@ -11,17 +11,38 @@ export async function GET(
   try {
 
     const { id } = await context.params;
-    const product = sql `SELECT P.id, B.name as brand, C.name as category, P.name, P.description, P.colors, P.sizes, P.gender, P.material, P.price, P.sku, P.discount_price, P.stock_quantity, P.imageUrls  
-    FROM products as P inner join brands as B ON P.brand_id = B.id inner join categories as C ON C.id = P.category_id WHERE P.sku=${id}
-    `
+    const product = await sql`
+  SELECT 
+    P.id,
+    B.name AS brand,
+    C.name AS category,
+    P.name,
+    P.description,
+    P.colors,
+    P.sizes,
+    P.gender,
+    P.material,
+    P.price,
+    P.sku,
+    P.discount_price,
+    P.feature,
+    P.stock_quantity,
+    P.imageUrls
+  FROM products AS P
+  INNER JOIN brands AS B ON P.brand_id = B.id
+  INNER JOIN categories AS C ON P.category_id = C.id
+  WHERE P.sku = ${id};
+`;
+
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
-    return NextResponse.json(product, { status: 200 });
+    
+    return NextResponse.json(product[0], { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch product " + error }, { status: 500 });
   }
 }
 

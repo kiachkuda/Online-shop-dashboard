@@ -6,7 +6,7 @@ import { put } from '@vercel/blob'
 import  path  from "path";
 import { writeFile } from "fs/promises";
 
-import  { sql, getProductsByPage } from "@/app/lib/data";
+import  { sql } from "@/app/lib/data";
 
 
 // GET /api/products
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
   let params: any[] = [];
 
   if (brand) whereClauses.push(sql`b.name = ${brand}`);
-  if (category) whereClauses.push(sql`c.name = ${category}`);
+  if (category) whereClauses.push(sql`c.slug = ${category}`);
   if (gender) whereClauses.push(sql`p.gender = ${gender}`);
   if (min_price) whereClauses.push(sql`p.price >= ${Number(min_price)}`);
   if (max_price) whereClauses.push(sql`p.price <= ${Number(max_price)}`);
@@ -66,13 +66,14 @@ export async function GET(req: NextRequest) {
         p.feature,
         p.sku,
         p.discount_price,
-        p.color,
-        p.size,
+        p.colors,
+        p.sizes,
         p.gender,
         p.stock_quantity,
         p.imageUrls,
         b.name AS brand,
         c.name AS category
+        
       FROM products p
       JOIN brands b ON p.brand_id = b.id
       JOIN categories c ON p.category_id = c.id
@@ -80,7 +81,7 @@ export async function GET(req: NextRequest) {
       ORDER BY ${orderBy}
       LIMIT ${limit} OFFSET ${offset}
     `;
-
+    console.log(results)
     return NextResponse.json({
       current_page: page,
       total_pages: Math.ceil(totalCount / limit),
@@ -202,7 +203,6 @@ export async function POST(req: Request) {
 // Function to save images to the server
 async function saveImages(images: File[]) {
   const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-
   await Promise.all(images.map(async (image) => {
     const arrayBuffer = await image.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -220,7 +220,6 @@ export async function saveImagesToVercel(images: File[]) {
       access: "public",          // public URL
       addRandomSuffix: true,     // avoids overwriting files
     });
-
     uploadedUrls.push(blob.url); // Store the URL (save in DB later)
   }
 

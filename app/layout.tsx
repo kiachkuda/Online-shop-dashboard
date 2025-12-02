@@ -1,6 +1,6 @@
 "use client"
 import "./globals.css";
-import Header from './ui/components/header';
+import {Header} from './ui/components/header';
 // import SideNav from "./ui/components/sideNav";
 import { CartProvider } from "@/contexts/CartProvider";
 import AuthProvider from "@/contexts/AuthProvider";
@@ -16,9 +16,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ViewedItemsProvider>
-        <AuthProvider>
+       
         <CartProvider>
-          
+           <AuthProvider>
         <div className="flex shrink-0 items-end rounded-lg">
         <Header />
        </div>
@@ -27,9 +27,9 @@ export default function RootLayout({
         
           {children}
         </div>
-
+</AuthProvider>
       </CartProvider>
-      </AuthProvider>
+      
       </ViewedItemsProvider>
       </body>
     </html>
