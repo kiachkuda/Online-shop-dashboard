@@ -115,7 +115,7 @@ export async function POST(req: Request) {
     const brand_id = formData.get('brand');
     const gender = formData.get('gender');
     const category_id = formData.get('category');
-    const buyingPrice = formData.get('buyingPrice');
+    // const buyingPrice = formData.get('buyingPrice');
     const price = formData.get('price');
     const discount = formData.get('discount');
     const stock_quantity = formData.get('stock');
@@ -131,7 +131,7 @@ export async function POST(req: Request) {
   }
 
 
-    if(!name || !brand_id || !price || !buyingPrice) {
+    if(!name || !brand_id || !price) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -139,7 +139,7 @@ export async function POST(req: Request) {
     }
 
     // If price is not a number
-    if (isNaN(Number(price)) || isNaN(Number(buyingPrice))) {
+    if (isNaN(Number(price))) {
       return NextResponse.json(
         { error: "Price and Buying Price must be numbers" },
         { status: 400 }
@@ -162,7 +162,7 @@ export async function POST(req: Request) {
     const brand_id_str = brand_id ? String(brand_id) : null;
     const category_id_str = category_id ? String(category_id) : null;
     const gender_str = gender ? String(gender) : null;
-    const buyingPriceNum = Number(buyingPrice);
+    
     const priceNum = Number(price);
     const discountNum = discount ? Number(discount) : null;
     const stock_quantity_num = stock_quantity ? Number(stock_quantity) : null;
@@ -196,7 +196,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Product created" }, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to create product" + error }, { status: 500 });
   }
 }
 

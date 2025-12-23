@@ -12,9 +12,16 @@ export default function Page() {
       <HeroCarousel />
       <Suspense>
         <Products />
-       
       </Suspense>
-      <Offer src={BgOne} title='Furniture Sale' discount={20}  />
+      <div className='mt-5'>
+        <h1 className='text-4xl font-extrabold'>Great Offers</h1>
+      </div>
+      <div className="flex gap-1">
+        <Offer src={BgOne} title='Furniture Sale' discount={20}  />
+        <Offer src={BgOne} title='Furniture Sale' discount={10}  />
+        <Offer src={BgOne} title='Furniture Sale' discount={20}  />
+      </div>
+      
     </main>
   );
 }

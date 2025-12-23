@@ -19,42 +19,36 @@ export default function ProductsTable() {
   const [limit, setLimit] = useState(10); // number of products per page
   const [sort, setSort] = useState('DESC');
 
-    useEffect(() => {
-    fetchProducts(currentPage);
-  }, [currentPage, limit, sort]);
 
-  const fetchProducts = async (page: number) => {
+  const fetchProducts = async () => {
     setLoading(true);
     try {
-      const query = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-        sort,
-      });
-
-     
-
-
+      
       const res = await fetch(
-        `api/products`
+        `../api/products`
       );
       const data = await res.json();
-       console.log(data)
+       console.log(data.results)
       // Extract directly based on your response structure
       setProducts(data.results);
-      setCurrentPage(data.current_page || 1);
-      setTotalPages(data.total_pages || 1);
+      
     } catch (err) {
       console.error("Error fetching products:", err);
     } finally {
       setLoading(false);
     }
   };
+
+    useEffect(() => {
+    fetchProducts();
+  }, [currentPage, limit, sort]);
+
+  
  
 
     const deleteProduct = async (id: string) => {
       try {
-        const res = await fetch(`/api/products/${id}`, {
+        const res = await fetch(`../api/products/${id}`, {
           method: "DELETE",
         });
         if (res.ok) {

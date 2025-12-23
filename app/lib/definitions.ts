@@ -45,7 +45,7 @@ export type ProductTable = {
     name:string;
     description:string;
     brand:string;
-    gender: "Men" | 'Women' | 'Kids' | 'Unisex';
+    gender: "Male" | 'Female' | 'Kids' | 'Unisex';
     category: string;
     price:number;
     discount:number;
@@ -96,3 +96,8 @@ export interface CartContextType {
   subtotal: number;
 }
 
+export interface Category {
+  id : string;
+  name: string;
+  
+}

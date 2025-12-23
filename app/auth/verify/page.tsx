@@ -78,7 +78,7 @@ export default function VerifyPage() {
                  setError("");
                     // Redirect to login page after 2 seconds
                     setTimeout(() => {
-                        window.location.href = `/pages/login`
+                        window.location.href = `/login`
                     }, 1500);
                     return;
             }

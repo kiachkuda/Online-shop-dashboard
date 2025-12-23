@@ -74,8 +74,6 @@ export async function DELETE(
 export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
-
-
     const formData = await req.formData();
     const description = String(formData.get("description"));
     const price = Number(formData.get("price"));
@@ -83,8 +81,6 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
     const stock = Number(formData.get("stock"));
     const features =  formData.get("features");
     const updatedAt = new Date();
-
-
    const res = sql `UPDATE products  SET description = ${description}, price = ${price}, discount_price =${discount}, stock_quantity =${stock}, updatedAt=${updatedAt}WHERE id =${id}`
 
   return NextResponse.json({ message: "Product updated successfully" }, { status: 200 });

@@ -29,6 +29,8 @@ export default function ProductCard({
     ? imageUrls
     : (JSON.parse(imageUrls || "[]") as string[]);
 
+    console.log(images)
+
   const sizeArray: string[] = Array.isArray(sizes)
     ? sizes
     : (JSON.parse(sizes || "[]") as string[]);
@@ -58,9 +60,9 @@ export default function ProductCard({
       <span onClick={() => fetchProduct(sku)}>
       <div className="img-container relative aspect-[5/6]" style={{}}>
         <Image
-          src={images[0] ? `${images[0]}` : "/uploads/2.jpg"}
+          src={images[0] ? `${images[0]}` : `{'uploads/1.jpg}`}
           alt={name}
-          fill
+          fill 
           loading="lazy"
           placeholder="empty"
           className="object-cover object-center w-[100%] h-[100%]"

@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     
     
     let name: string = firstname + " " + lastname;
-    const query = await sql `INSERT users(email, phone, password_hash, name, otp_code, otp_expires_at) 
+    const query = await sql `INSERT INTO users(email, phone, password_hash, name, otp_code, otp_expires_at) 
     values(${email}, ${phone}, ${hashedPassword}, ${name}, ${otp}, ${otpExpiry})`;
     if(!query){
       return NextResponse.json(
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Sign Up Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error: " + error },
+      { error: "Sign Up Error: Internal Server Error: " + error },
       { status: 500 }
     );
   }
