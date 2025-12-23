@@ -10,7 +10,7 @@ export async function GET(res : NextResponse) {
             WHERE is_featured = true 
                 AND stock_quantity > 0
             ORDER BY featured_position ASC
-            LIMIT 3;
+            LIMIT 
         `;
 
         const trending_products = await sql`
