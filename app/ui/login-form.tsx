@@ -126,7 +126,7 @@ export default function LoginForm() {
         <div className="mt-4 text-center text-sm text-gray-500">
           No account?{' '}
           <a
-            href="/auth/signup"
+            href="/signup"
             className="text-blue-600 underline transition hover:text-blue-700"
           >
             Sign up

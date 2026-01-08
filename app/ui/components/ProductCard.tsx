@@ -54,7 +54,7 @@ export default function ProductCard({
 
   return (
 
-    <div className="bg-gray-200 relative hover:cursor-pointer hover">
+    <div className="bg-gray-200 relative hover:cursor-pointer hover rounded-lg">
       <span onClick={() => fetchProduct(sku)}>
       <div className="img-container relative aspect-[5/6]" style={{}}>
         <Image
@@ -80,15 +80,15 @@ export default function ProductCard({
       </div>
       </span>
 
-      <div className="md:my-2 my-5 px-3 py-2 md:text-lg lg:text-sm text-xl tracking-wide md:py-4 md:h-[100px] h-[120px]">
+      <div onClick={() => fetchProduct(sku)} className="md:my-2 mt-5 px-3 py-2 md:text-lg lg:text-sm text-xl tracking-wide md:py-4 md:h-[100px] h-[120px]">
         {/* Title */}
         <p className="my-2">
           {name}
         </p>
         <p>KES {price}</p>
       </div>
-      <div className='w-full p-2 mt-4'>
-        <button onClick={() => fetchProduct(sku)} className="bg-yellow-600 md:p-2 p-2 rounded-lg md:text-lg text-xl w-full">Add to cart</button>
+      <div className='w-full'>
+        {/* <button onClick={() => fetchProduct(sku)} className="bg-yellow-600 md:p-2 p-2 rounded-lg md:text-lg text-xl w-full">Add to cart</button> */}
       </div>
 
 

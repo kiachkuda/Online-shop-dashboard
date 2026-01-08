@@ -2,6 +2,8 @@
 import Products from '@/app/ui/components/Products';
 import HeroCarousel from '@/app/ui/components/HeroCarousel';
 import { Suspense } from 'react';
+import { Offer } from './ui/components/offer';
+import BgOne from '@/public/images/594x290-2.jpg'
 
 
 export default function Page() {
@@ -10,8 +12,9 @@ export default function Page() {
       <HeroCarousel />
       <Suspense>
         <Products />
+       
       </Suspense>
-      
+      <Offer src={BgOne} title='Furniture Sale' discount={20}  />
     </main>
   );
 }
